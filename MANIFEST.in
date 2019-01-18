@@ -1,0 +1,18 @@
+graft docs
+graft tests
+
+include aabb.py
+
+include .bumpversion.cfg
+include .coveragerc
+include .editorconfig
+
+include LICENSE.rst
+include README.rst
+
+include tox.ini
+
+prune docs/source/_static
+prune docs/build
+
+global-exclude *.py[cod] __pycache__ *.so *.dylib .DS_Store *.log Icon*
