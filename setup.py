@@ -17,7 +17,7 @@ setup(
     name='AABBTree',
     version='1.0',
     license='MIT License',
-    description='Statistical microstructure generation.',
+    description='Pure Python implementation of d-dimensional AABB tree.',
     long_description=read('README.rst'),
     long_description_content_type='text/x-rst',
     author='Kenneth (Kip) Hart',
