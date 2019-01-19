@@ -2,6 +2,6 @@ language: python
 python:
   - "3.6"
 install:
-  - python setup.py install
+  - pip install -U aabbtree pytest pytest-cov coveralls
 script:
   - pytest
