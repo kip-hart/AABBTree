@@ -24,9 +24,9 @@ copyright = '2019, Georgia Tech Research Corporation'
 author = 'Kenneth Hart'
 
 # The short X.Y version
-version = '0.0'
+version = '1.0'
 # The full version, including alpha/beta/rc tags
-release = '0.0-alpha'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------
