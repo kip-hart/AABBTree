@@ -5,7 +5,7 @@ AABBTree
 
 AABBTree is a pure Python implementation of a static d-dimensional
 axis aligned bounding box (AABB) tree. It is heavily based on
-`Introductory Guide to AABB Tree Collision Dectection`_
+`Introductory Guide to AABB Tree Collision Detection`_
 from *Azure From The Trenches*.
 
 
@@ -88,7 +88,7 @@ the MIT license.
 
 .. |copy| unicode:: 0xA9 .. copyright sign
 .. _`AABBTree repository` : https://github.com/kip-hart/AABBTree
-.. _`Introductory Guide to AABB Tree Collision Dectection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
+.. _`Introductory Guide to AABB Tree Collision Detection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
 .. |s-license| image:: https://img.shields.io/pypi/l/aabbtree.svg
 .. |s-docs| image:: https://readthedocs.org/projects/aabbtree/badge/?version=latest
     :target: https://aabbtree.readthedocs.io/en/latest/?badge=latest
