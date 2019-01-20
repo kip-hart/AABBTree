@@ -223,10 +223,13 @@ class AABB(object):
         return len(self.limits)
 
     def __eq__(self, aabb):
-        if not isinstance(aabb, AABB):
-            raise TypeError(str(aabb) + ' is not an AABB')
-
-        if len(self) != len(aabb):
+        if (self.limits is None) and (aabb.limits is None):
+            return True
+        elif self.limits is None:
+            return False
+        elif aabb.limits is None:
+            return False
+        elif len(self) != len(aabb):
             return False
 
         for i in range(len(self)):

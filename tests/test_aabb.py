@@ -27,6 +27,10 @@ def test_eq():
     assert aabb2 != aabb1
     assert aabb2 == aabb3
 
+    assert aabb1 != limits1
+    assert AABB([(2, 3)]) != aabb1
+    assert AABB() == AABB()
+
 
 def test_str():
     limits = [(2, 3), (-20, 24), (2.3, 6.71)]
@@ -49,6 +53,10 @@ def test_merge():
     aabb3 = AABB([(0.5, 3)])
     assert AABB([(0, 3)]) == AABB.merge(aabb1, aabb3)
 
+    assert aabb1 == AABB.merge(aabb1, AABB())
+    assert aabb2 == AABB.merge(AABB(), aabb2)
+    assert AABB() == AABB.merge(AABB(), AABB())
+
 
 def test_perimeter():
     # 1D
@@ -64,3 +72,14 @@ def test_perimeter():
     assert AABB([(-3, -2), (4, 5), (0, 1)]).perimeter == 6
     assert AABB([(2, 2), (3, 3), (-1, -1)]).perimeter == 0
     assert AABB([(4, 4), (0, 1), (0, 1)]).perimeter == 2
+
+
+def test_overlaps():
+    aabb1 = AABB([(0, 10), (0, 10)])
+    aabb2 = AABB([(-5, 5), (-6, 3)])
+    aabb3 = AABB([(10, 12), (5, 6)])
+
+    assert aabb1.overlaps(aabb2)
+    assert aabb2.overlaps(aabb1)
+    assert not aabb3.overlaps(aabb2)
+    assert not aabb2.overlaps(aabb3)
