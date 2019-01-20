@@ -1,7 +1,7 @@
 AABBTree
 ========
 
-|s-docs| |s-license|
+|s-pver| |s-travis| |s-cov| |s-docs| |s-license|
 
 AABBTree is a pure Python implementation of a static d-dimensional
 axis aligned bounding box (AABB) tree. It is heavily based on
@@ -90,6 +90,17 @@ the MIT license.
 .. _`AABBTree repository` : https://github.com/kip-hart/AABBTree
 .. _`Introductory Guide to AABB Tree Collision Detection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
 .. |s-license| image:: https://img.shields.io/pypi/l/aabbtree.svg
+    :target: https://github.com/kip-hart/AABBTree/blob/master/LICENSE.rst
+    :alt: License
 .. |s-docs| image:: https://readthedocs.org/projects/aabbtree/badge/?version=latest
     :target: https://aabbtree.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+.. |s-travis| image:: https://travis-ci.org/kip-hart/AABBTree.svg?branch=master
+    :target: https://travis-ci.org/kip-hart/AABBTree
+    :alt: Travis CI
+.. |s-cov| image:: https://coveralls.io/repos/github/kip-hart/AABBTree/badge.svg?branch=master
+    :target: https://coveralls.io/github/kip-hart/AABBTree?branch=master
+    :alt: Coverage
+.. |s-pver| image:: https://img.shields.io/pypi/v/aabbtree.svg
+    :target: https://pypi.org/project/aabbtree/
+    :alt: PyPI
