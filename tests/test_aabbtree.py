@@ -25,11 +25,7 @@ def test_str():
     empty_str = 'AABB: None\nValue: None\nLeft: None\nRight: None'
     assert str(AABBTree()) == empty_str
 
-    aabb1 = AABB([(0, 1), (0, 1)])
-    aabb2 = AABB([(3, 4), (0, 1)])
-    aabb3 = AABB([(5, 6), (5, 6)])
-    aabb4 = AABB([(7, 8), (5, 6)])
-
+    aabb1, aabb2, aabb3, aabb4 = standard_aabbs()
     tree = AABBTree()
     tree.add(aabb1, 'x')
     tree.add(aabb2, 'y')
@@ -40,10 +36,7 @@ def test_str():
 
 
 def test_repr():
-    aabb1 = AABB([(0, 1), (0, 1)])
-    aabb2 = AABB([(3, 4), (0, 1)])
-    aabb3 = AABB([(5, 6), (5, 6)])
-    aabb4 = AABB([(7, 8), (5, 6)])
+    aabb1, aabb2, aabb3, aabb4 = standard_aabbs()
 
     tree = AABBTree()
     tree.add(aabb1, 'x')
@@ -101,27 +94,12 @@ def test_add():
 
 
 def test_add_merge():
-    aabb1 = AABB([(0, 1), (0, 1)])
-    aabb2 = AABB([(3, 4), (0, 1)])
-    aabb3 = AABB([(5, 6), (5, 6)])
-    aabb4 = AABB([(7, 8), (5, 6)])
-
-    tree = AABBTree()
-    tree.add(aabb1)
-    tree.add(aabb2)
-    tree.add(aabb3)
-    tree.add(aabb4)
-
-    aabb_merge(tree)
-
-    tree = AABBTree()
-    tree.add(aabb2)
-    tree.add(aabb3)
-    tree.add(aabb1)
-    tree.add(aabb4)
-    tree.add(tree.aabb)
-
-    aabb_merge(tree)
+    aabbs = standard_aabbs()
+    for indices in itertools.permutations(range(4)):
+        tree = AABBTree()
+        for i in indices:
+            tree.add(aabbs[i])
+        aab_merge(tree)
 
 
 def aabb_merge(tree):
@@ -132,16 +110,11 @@ def aabb_merge(tree):
 
 
 def test_does_overlap():
-    aabb1 = AABB([(0, 1), (0, 1)])
-    aabb2 = AABB([(3, 4), (0, 1)])
-    aabb3 = AABB([(5, 6), (5, 6)])
-    aabb4 = AABB([(7, 8), (5, 6)])
-
     aabb5 = AABB([(-3, 3), (-3, 3)])
     aabb6 = AABB([(0, 1), (5, 6)])
     aabb7 = AABB([(6.5, 6.5), (5.5, 5.5)])
 
-    aabbs = [aabb1, aabb2, aabb3, aabb4]
+    aabbs = standard_aabbs()
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
         for i in indices:
@@ -153,23 +126,13 @@ def test_does_overlap():
 
 
 def test_overlap_values():
-    aabb1 = AABB([(0, 1), (0, 1)])
-    aabb2 = AABB([(3, 4), (0, 1)])
-    aabb3 = AABB([(5, 6), (5, 6)])
-    aabb4 = AABB([(7, 8), (5, 6)])
+    aabbs = standard_aabbs()
+    values = ['value 1', 3.14, None, None]
 
     aabb5 = AABB([(-3, 3.1), (-3, 3)])
     aabb6 = AABB([(0, 1), (5, 6)])
     aabb7 = AABB([(6.5, 6.5), (5.5, 5.5)])
 
-    tree = AABBTree()
-    tree.add(aabb1, 'value 1')
-    tree.add(aabb2, 3.14)
-    tree.add(aabb3)
-    tree.add(aabb4)
-
-    aabbs = [aabb1, aabb2, aabb3, aabb4]
-    values = ['value 1', 3.14, None, None]
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
         for i in indices:
@@ -184,3 +147,22 @@ def test_overlap_values():
         assert tree.overlap_values(aabb7) == []
 
     assert AABBTree(aabb1).overlap_values(aabb2) == []
+
+
+def standard_aabbs():
+    aabb1 = AABB([(0, 1), (0, 1)])
+    aabb2 = AABB([(3, 4), (0, 1)])
+    aabb3 = AABB([(5, 6), (5, 6)])
+    aabb4 = AABB([(7, 8), (5, 6)])
+    return [aabb1, aabb2, aabb3, aabb4]
+
+
+def standard_tree():
+    aabb1, aabb2, aabb3, aabb4 = standard_aabbs()
+
+    tree = AABBTree()
+    tree.add(aabb1, 'value 1')
+    tree.add(aabb2, 3.14)
+    tree.add(aabb3)
+    tree.add(aabb4)
+    return tree
