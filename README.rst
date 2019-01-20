@@ -1,12 +1,14 @@
 AABBTree
 ========
 
+.. begin-introduction
 |s-pver| |s-travis| |s-cov| |s-docs| |s-license|
 
 AABBTree is a pure Python implementation of a static d-dimensional
 axis aligned bounding box (AABB) tree. It is heavily based on
 `Introductory Guide to AABB Tree Collision Detection`_
 from *Azure From The Trenches*.
+.. end-introduction
 
 
 Installation
