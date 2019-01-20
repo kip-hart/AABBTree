@@ -26,7 +26,7 @@ setup(
     project_urls={
         'Documentation': 'https://aabbtree.readthedocs.io',
     },
-    py_modules=['aabb'],
+    py_modules=['aabbtree'],
     include_package_data=True,
     zip_safe=False,
     classifiers=[

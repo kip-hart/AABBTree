@@ -10,7 +10,7 @@ Welcome to AABBTree!
 API
 ===
 
-.. include:: aabb.rst
+.. include:: aabbtree.rst
   :start-line: 2
 
 

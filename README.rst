@@ -18,7 +18,7 @@ AABBTree is available through PyPI and can be installed by running::
 
 To test that the package installed properly, run::
 
-  python -c "import aabb"
+  python -c "import aabbtree"
 
 Alternatively, the package can be installed from source by downloading the
 latest release from the `AABBTree repository`_ on GitHub. Extract the source
@@ -34,7 +34,8 @@ Example
 
 The following example shows how to build an AABB tree and test for overlap::
 
-  >>> from aabb import AABB, AABBTree
+  >>> from aabbtree import AABB
+  >>> from aabbtree import AABBTree
   >>> tree = AABBTree()
   >>> aabb1 = AABB([(0, 0), (0, 0)])
   >>> aabb2 = AABB([(-1, 1), (-1, 1)])

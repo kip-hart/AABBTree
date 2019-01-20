@@ -1,7 +1,7 @@
-aabb module
-===========
+aabbtree module
+===============
 
-.. automodule:: aabb
+.. automodule:: aabbtree
     :members:
     :undoc-members:
     :show-inheritance:

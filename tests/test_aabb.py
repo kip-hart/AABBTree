@@ -1,4 +1,4 @@
-from aabb import AABB
+from aabbtree import AABB
 
 
 def test_init():
