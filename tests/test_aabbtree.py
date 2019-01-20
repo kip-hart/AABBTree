@@ -20,8 +20,19 @@ def test_init():
 
 
 def test_repr():
-    tree = AABBTree(AABB([(2, 4), (4, 4)]))
+    aabb1 = AABB([(0, 1), (0, 1)])
+    aabb2 = AABB([(3, 4), (0, 1)])
+    aabb3 = AABB([(5, 6), (5, 6)])
+    aabb4 = AABB([(7, 8), (5, 6)])
+
+    tree = AABBTree()
+    tree.add(aabb1, 'x')
+    tree.add(aabb2, 'y')
+    tree.add(aabb3, 3.14)
+    tree.add(aabb4)
+
     assert tree == eval(repr(tree))
+    assert AABBTree() == eval(repr(AABBTree()))
 
 
 def test_eq():
@@ -29,15 +40,23 @@ def test_eq():
     tree.add(AABB([(2, 3)]))
     tree.add(AABB([(4, 5)]))
     tree.add(AABB([(-2, 2)]))
+    tree2 = AABBTree(tree.aabb)
+
     assert tree == tree
     assert AABBTree() == AABBTree()
     assert tree != AABBTree()
     assert AABBTree() != tree
+    assert AABBTree() != AABB()
+    assert tree != tree2
+    assert tree2 != tree
 
     assert not tree != tree
     assert not AABBTree() != AABBTree()
     assert not tree == AABBTree()
     assert not AABBTree() == tree
+    assert not AABBTree() == AABB()
+    assert not tree == tree2
+    assert not tree2 == tree
 
 
 def test_is_leaf():
@@ -75,11 +94,13 @@ def test_add_merge():
 
     aabb_merge(tree)
 
+
 def aabb_merge(tree):
     if not tree.is_leaf:
         assert tree.aabb == AABB.merge(tree.left.aabb, tree.right.aabb)
         aabb_merge(tree.left)
         aabb_merge(tree.right)
+
 
 def test_does_overlap():
     aabb1 = AABB([(0, 1), (0, 1)])
