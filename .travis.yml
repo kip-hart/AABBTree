@@ -2,7 +2,8 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install -U aabbtree pytest pytest-cov coveralls
+  - pip install -U pytest pytest-cov coveralls
+  - pip install -e .
 script:
   - pytest
 after_success:
