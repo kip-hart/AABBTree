@@ -5,10 +5,6 @@ python:
   - 3.5
   - 3.6
   - 3.7
-os:
-  - windows
-  - linux
-  - osx
 install:
   - pip install -U pytest pytest-cov coveralls
   - pip install -e .
