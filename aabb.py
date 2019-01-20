@@ -192,7 +192,7 @@ class AABBTree(object):
 
         return 'AABBTree(' + ', '.join(inp_strs) + ')'
 
-    def __str__(self, n=0):  # pragma: no cover
+    def __str__(self, n=0):
         strs = []
         pre = n * '  '
 
