@@ -15,7 +15,7 @@ def read(fname):
 
 setup(
     name='aabbtree',
-    version='1.2.2',
+    version='2.0',
     license='MIT',
     description='Pure Python implementation of d-dimensional AABB tree.',
     long_description=read('README.rst'),
