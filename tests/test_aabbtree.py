@@ -173,7 +173,7 @@ def test_overlap_values():
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
         for i in indices:
-            tree.add(aabbs[i])
+            tree.add(aabbs[i], values[i])
 
         vals5 = tree.overlap_values(aabb5)
         assert len(vals5) == 2
