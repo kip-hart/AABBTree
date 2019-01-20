@@ -223,6 +223,9 @@ class AABB(object):
         return len(self.limits)
 
     def __eq__(self, aabb):
+        if not isinstance(aabb, AABB):
+            return False
+
         if (self.limits is None) and (aabb.limits is None):
             return True
         elif self.limits is None:
