@@ -213,11 +213,28 @@ class AABB(object):
         else:
             raise StopIteration
 
+    def next(self):  # pragma: no cover
+        return self.__next__()
+
+    def __getitem__(self, key):
+        return self.limits[key]
+
     def __len__(self):
         return len(self.limits)
 
-    def next(self):
-        return self.__next__()
+    def __eq__(self, aabb):
+        if not isinstance(aabb, AABB):
+            raise TypeError(str(aabb) + ' is not an AABB')
+
+        if len(self) != len(aabb):
+            return False
+
+        for i in range(len(self)):
+            lims1 = self[i]
+            lims2 = aabb[i]
+            if (lims1[0] != lims2[0]) or (lims1[1] != lims2[1]):
+                return False
+        return True
 
     @classmethod
     def merge(cls, aabb1, aabb2):
@@ -263,13 +280,16 @@ class AABB(object):
             \end{align}
 
         """
+        if len(self) == 1:
+            return 0
+
         p = 0
-        side_lens = [ub - lb for lb, ub in limits]
-        for j in range(len(side_lens)):
+        side_lens = [ub - lb for lb, ub in self]
+        for i in range(len(side_lens)):
             p_edge = 1
-            for k in range(len(side_lens)):
-                if k != j:
-                    p_edge *= side_lens[k]
+            for j in range(len(side_lens)):
+                if j != i:
+                    p_edge *= side_lens[j]
             p += p_edge
         return 2 * p
 
