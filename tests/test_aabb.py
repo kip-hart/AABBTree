@@ -30,6 +30,8 @@ def test_eq():
     assert aabb1 != limits1
     assert AABB([(2, 3)]) != aabb1
     assert AABB() == AABB()
+    assert aabb1 != AABB()
+    assert AABB() != aabb1
 
 
 def test_str():
