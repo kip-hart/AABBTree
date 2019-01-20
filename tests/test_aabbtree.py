@@ -1,5 +1,4 @@
 import itertools
-from ast import literal_eval
 
 from aabb import AABB, AABBTree
 
@@ -40,6 +39,13 @@ def test_str():
     assert str(tree) == full_str
 
 
+def eval_code(code):
+    parsed = ast.parse(code, mode='eval')
+    fixed = ast.fix_missing_locations(parsed)
+    compiled = compile(fixed, '<string>', 'eval')
+    eval(compiled)
+
+
 def test_repr():
     aabb1 = AABB([(0, 1), (0, 1)])
     aabb2 = AABB([(3, 4), (0, 1)])
@@ -52,8 +58,8 @@ def test_repr():
     tree.add(aabb3, 3.14)
     tree.add(aabb4)
 
-    assert tree == literal_eval(repr(tree))
-    assert AABBTree() == literal_eval(repr(AABBTree()))
+    assert repr(tree) == "AABBTree(aabb=AABB([(0, 8), (0, 6)]), left=AABBTree(aabb=AABB([(0, 1), (0, 1)]), value='x'), right=AABBTree(aabb=AABB([(3, 8), (0, 6)]), left=AABBTree(aabb=AABB([(3, 4), (0, 1)]), value='y'), right=AABBTree(aabb=AABB([(5, 8), (5, 6)]), left=AABBTree(aabb=AABB([(5, 6), (5, 6)]), value=3.14), right=AABBTree(aabb=AABB([(7, 8), (5, 6)])))))"  # NOQA: E501
+    assert repr(AABBTree()) == 'AABBTree()'
 
 
 def test_eq():
