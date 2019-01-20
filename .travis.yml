@@ -1,6 +1,14 @@
 language: python
 python:
-  - "3.6"
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
+  - 3.7
+os:
+  - windows
+  - linux
+  - osx
 install:
   - pip install -U pytest pytest-cov coveralls
   - pip install -e .
