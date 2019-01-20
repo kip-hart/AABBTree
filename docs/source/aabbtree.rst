@@ -1,5 +1,5 @@
-aabbtree module
-===============
+API
+===
 
 .. automodule:: aabbtree
     :members:

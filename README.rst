@@ -63,11 +63,13 @@ The following example shows how to build an AABB tree and test for overlap::
     Right: None
 
 
+.. begin-documentation
 Documentation
 =============
 
 Documentation for the project is available at
 https://aabbtree.readthedocs.io.
+.. end-documentation
 
 
 Contributing
