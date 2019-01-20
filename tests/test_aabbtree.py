@@ -1,6 +1,7 @@
 import itertools
 
-from aabbtree import AABB, AABBTree
+from aabbtree import AABB
+from aabbtree import AABBTree
 
 
 def test_init():
