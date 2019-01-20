@@ -1,6 +1,10 @@
 AABBTree
 ========
 
+.. image:: https://api.codacy.com/project/badge/Grade/27d38e1a4dd24fc7b63a8ec61a1e7609
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/app/kip-hart/AABBTree?utm_source=github.com&utm_medium=referral&utm_content=kip-hart/AABBTree&utm_campaign=Badge_Grade_Settings
+
 |s-pver| |s-travis| |s-cov| |s-docs| |s-license|
 
 AABBTree is a pure Python implementation of a static d-dimensional
