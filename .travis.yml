@@ -12,10 +12,9 @@ matrix:
 before_install:
   - pip install six
 install:
-  - pip install -U pytest pytest-cov coveralls codacy-coverage
+  - pip install -U pytest pytest-cov coveralls
   - pip install -e .
 script:
   - pytest
 after_success:
   - coveralls
-  - coverage xml
