@@ -112,12 +112,10 @@ class AABB(object):
 
         .. math::
 
-            \begin{align}
-            p_1 &= 0 &\\
-            p_2 &= 2 (l_1 + l_2)  &\\
-            p_3 &= 2 (l_1 l_2 + l_2 l_3 + l_1 l_3) &\\
-            p_n &= 2 \sum_{i=1}^n \prod_{j=1\neq i}^n l_j &
-            \end{align}
+            p_1 &= 0 \\
+            p_2 &= 2 (l_1 + l_2) \\
+            p_3 &= 2 (l_1 l_2 + l_2 l_3 + l_1 l_3) \\
+            p_n &= 2 \sum_{i=1}^n \prod_{j=1\neq i}^n l_j
 
         """
         if len(self) == 1:
