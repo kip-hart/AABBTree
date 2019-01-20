@@ -39,13 +39,6 @@ def test_str():
     assert str(tree) == full_str
 
 
-def eval_code(code):
-    parsed = ast.parse(code, mode='eval')
-    fixed = ast.fix_missing_locations(parsed)
-    compiled = compile(fixed, '<string>', 'eval')
-    eval(compiled)
-
-
 def test_repr():
     aabb1 = AABB([(0, 1), (0, 1)])
     aabb2 = AABB([(3, 4), (0, 1)])
@@ -151,7 +144,8 @@ def test_does_overlap():
     aabbs = [aabb1, aabb2, aabb3, aabb4]
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
-        [tree.add(aabbs[i]) for i in indices]
+        for i in indices:
+            tree.add(aabbs[i])
 
         assert tree.does_overlap(aabb5)
         assert not tree.does_overlap(aabb6)
@@ -178,7 +172,8 @@ def test_overlap_values():
     values = ['value 1', 3.14, None, None]
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
-        [tree.add(aabbs[i], values[i]) for i in indices]
+        for i in indices:
+            tree.add(aabbs[i])
 
         vals5 = tree.overlap_values(aabb5)
         assert len(vals5) == 2
