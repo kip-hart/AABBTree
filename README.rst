@@ -2,6 +2,7 @@ AABBTree
 ========
 
 .. begin-introduction
+
 |s-pver| |s-travis| |s-cov| |s-docs| |s-license|
 
 AABBTree is a pure Python implementation of a static d-dimensional
@@ -67,6 +68,7 @@ The following example shows how to build an AABB tree and test for overlap::
 
 
 .. begin-documentation
+
 Documentation
 =============
 
