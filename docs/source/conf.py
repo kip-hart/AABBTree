@@ -187,7 +187,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'AABBTree.tex', 'AABBTree Documentation',
-     'Kenneth Hart', 'manual'),
+     'Kenneth Hart', 'howto'),
 ]
 
 
@@ -196,7 +196,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'microstructpy', 'AABBTree Documentation',
+    (master_doc, 'AABBTree', 'AABBTree Documentation',
      [author], 1)
 ]
 
@@ -208,6 +208,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'AABBTree', 'AABBTree Documentation',
-     author, 'AABBTree', 'One line description of project.',
+     author, 'AABBTree',
+     'Pure Python implementation of d-dimensional AABB tree.',
      'Miscellaneous'),
 ]

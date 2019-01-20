@@ -108,6 +108,7 @@ class AABB(object):
         :math:`l_1, ..., l_n` is:
 
         .. math::
+            :numbered: False
 
             \begin{align}
             p_1 &= 0 \\
