@@ -146,7 +146,7 @@ def test_overlap_values():
         assert tree.overlap_values(aabb6) == []
         assert tree.overlap_values(aabb7) == []
 
-    assert AABBTree(aabb1).overlap_values(aabb2) == []
+    assert AABBTree(aabb5).overlap_values(aabb7) == []
 
 
 def standard_aabbs():
