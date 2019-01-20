@@ -1,3 +1,5 @@
+import itertools
+
 from aabb import AABB, AABBTree
 
 
@@ -94,6 +96,15 @@ def test_add_merge():
 
     aabb_merge(tree)
 
+    tree = AABBTree()
+    tree.add(aabb2)
+    tree.add(aabb3)
+    tree.add(aabb1)
+    tree.add(aabb4)
+    tree.add(tree.aabb)
+
+    aabb_merge(tree)
+
 
 def aabb_merge(tree):
     if not tree.is_leaf:
@@ -110,15 +121,16 @@ def test_does_overlap():
 
     aabb5 = AABB([(-3, 3), (-3, 3)])
     aabb6 = AABB([(0, 1), (5, 6)])
+    aabb7 = AABB([(6.5, 6.5), (5.5, 5.5)])
 
-    tree = AABBTree()
-    tree.add(aabb1)
-    tree.add(aabb2)
-    tree.add(aabb3)
-    tree.add(aabb4)
+    aabbs = [aabb1, aabb2, aabb3, aabb4]
+    for indices in itertools.permutations(range(4)):
+        tree = AABBTree()
+        [tree.add(aabbs[i]) for i in indices]
 
-    assert tree.does_overlap(aabb5)
-    assert not tree.does_overlap(aabb6)
+        assert tree.does_overlap(aabb5)
+        assert not tree.does_overlap(aabb6)
+        assert not tree.does_overlap(aabb7)
 
 
 def test_overlap_values():
@@ -129,6 +141,7 @@ def test_overlap_values():
 
     aabb5 = AABB([(-3, 3.1), (-3, 3)])
     aabb6 = AABB([(0, 1), (5, 6)])
+    aabb7 = AABB([(6.5, 6.5), (5.5, 5.5)])
 
     tree = AABBTree()
     tree.add(aabb1, 'value 1')
@@ -136,11 +149,18 @@ def test_overlap_values():
     tree.add(aabb3)
     tree.add(aabb4)
 
-    print(tree)
+    aabbs = [aabb1, aabb2, aabb3, aabb4]
+    values = ['value 1', 3.14, None, None]
+    for indices in itertools.permutations(range(4)):
+        tree = AABBTree()
+        [tree.add(aabbs[i], values[i]) for i in indices]
 
-    vals5 = tree.overlap_values(aabb5)
-    assert len(vals5) == 2
-    for val in ('value 1', 3.14):
-        assert val in vals5
+        vals5 = tree.overlap_values(aabb5)
+        assert len(vals5) == 2
+        for val in ('value 1', 3.14):
+            assert val in vals5
 
-    assert tree.overlap_values(aabb6) == []
+        assert tree.overlap_values(aabb6) == []
+        assert tree.overlap_values(aabb7) == []
+
+    assert AABBTree(aabb1).overlap_values(aabb2) == []

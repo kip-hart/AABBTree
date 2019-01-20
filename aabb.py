@@ -178,7 +178,7 @@ class AABBTree(object):
 
     def __repr__(self):
         inp_strs = []
-        if self.aabb is not None:
+        if self.aabb != AABB():
             inp_strs.append('aabb=' + repr(self.aabb))
 
         if self.value is not None:
@@ -192,12 +192,12 @@ class AABBTree(object):
 
         return 'AABBTree(' + ', '.join(inp_strs) + ')'
 
-    def __str__(self, n=0):
+    def __str__(self, n=0):  # pragma: no cover
         strs = []
         pre = n * '  '
 
         aabb_str = pre + 'AABB: '
-        if self.aabb is None:
+        if self.aabb == AABB():
             aabb_str += 'None'
         else:
             aabb_str += str(self.aabb)
