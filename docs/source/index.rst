@@ -9,13 +9,15 @@ Welcome to AABBTree!
     :end-before: .. end-introduction
 
 .. Image of AABB Tree
-.. figure:: https://www.ncollide.org/img/AABB_tree_BVT.svg
-  :scale: 50 %
-  :alt: AABB Tree
-  :align: center
+.. only:: html
+    .. figure:: https://www.ncollide.org/img/AABB_tree_BVT.svg
+      :scale: 50 %
+      :alt: AABB Tree
+      :align: center
 
-  Objects organized into an AABB tree.
-  Image Credit: ncollide, `Bounding Volumes`_.
+      Objects organized into an AABB tree.
+      Image Credit: ncollide, `Bounding Volumes`_.
+
 
 .. Installation and example sections
 .. include:: ../../README.rst
