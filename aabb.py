@@ -11,7 +11,7 @@ class AABBTree(object):
 
     This is a pure Python implementation of the static d-dimensional AABB tree.
     It is heavily based on
-    `Introductory Guide to AABB Tree Collision Dectection`_
+    `Introductory Guide to AABB Tree Collision Detection`_
     from *Azure From The Trenches*.
 
     Args:
@@ -20,7 +20,7 @@ class AABBTree(object):
         left (AABBTree, optional): The left branch of the tree
         right (AABBTree, optional): The right branch of the tree
 
-    .. _`Introductory Guide to AABB Tree Collision Dectection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
+    .. _`Introductory Guide to AABB Tree Collision Detection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
     """  # NOQA: E501
     def __init__(self, aabb=None, value=None, left=None, right=None):
 
