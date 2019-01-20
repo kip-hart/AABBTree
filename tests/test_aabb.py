@@ -33,6 +33,17 @@ def test_eq():
     assert aabb1 != AABB()
     assert AABB() != aabb1
 
+    assert not aabb1 != aabb1
+    assert not aabb1 == aabb2
+    assert not aabb2 == aabb1
+    assert not aabb2 != aabb3
+
+    assert not aabb1 == limits1
+    assert not AABB([(2, 3)]) == aabb1
+    assert not AABB() != AABB()
+    assert not aabb1 == AABB()
+    assert not AABB() == aabb1
+
 
 def test_str():
     limits = [(2, 3), (-20, 24), (2.3, 6.71)]
