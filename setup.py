@@ -23,6 +23,9 @@ setup(
     author='Kenneth (Kip) Hart',
     author_email='kiphart91@gmail.com',
     url='https://github.com/kip-hart/AABBTree',
+    project_urls={
+        'Documentation': 'https://aabbtree.readthedocs.io',
+    }
     py_modules=['aabb'],
     include_package_data=True,
     zip_safe=False,
