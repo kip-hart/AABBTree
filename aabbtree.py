@@ -13,7 +13,10 @@ class AABB(object):
         limits (iterable, optional): The limits of the box. These should be
             specified in the following manner::
 
-                limits = [(xmin, xmax), (ymin, ymax), (zmin, zmax), ...]
+                limits = [(xmin, xmax),
+                          (ymin, ymax),
+                          (zmin, zmax),
+                          ...]
 
             The default value is None.
     """
@@ -105,7 +108,7 @@ class AABB(object):
         r"""Perimeter of AABB
 
         The perimeter :math:`p_n` of an AABB with side lengths
-        :math:`l_1, ..., l_n` is:
+        :math:`l_1 \ldots l_n` is:
 
         .. math::
 
