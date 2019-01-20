@@ -26,6 +26,7 @@ class AABB(object):
                 assert lims[0] <= lims[1]
 
         self.limits = limits
+        self._i = 0
 
     def __str__(self):
         return str(self.limits)
@@ -42,10 +43,10 @@ class AABB(object):
             val = self.limits[self._i]
             self._i += 1
             return val
-        else:
-            raise StopIteration
+        raise StopIteration
 
     def next(self):  # pragma: no cover
+        """___next__ for Python 2"""
         return self.__next__()
 
     def __getitem__(self, key):
@@ -60,15 +61,12 @@ class AABB(object):
 
         if (self.limits is None) and (aabb.limits is None):
             return True
-        elif self.limits is None:
+        if (self.limits is None) or (aabb.limits is None):
             return False
-        elif aabb.limits is None:
-            return False
-        elif len(self) != len(aabb):
+        if len(self) != len(aabb):
             return False
 
-        for i in range(len(self)):
-            lims1 = self[i]
+        for i, lims1 in enumerate(self):
             lims2 = aabb[i]
             if (lims1[0] != lims2[0]) or (lims1[1] != lims2[1]):
                 return False
@@ -92,17 +90,17 @@ class AABB(object):
         """
         if (aabb1.limits is None) and (aabb2.limits is None):
             return cls(None)
-        elif aabb1.limits is None:
+        if aabb1.limits is None:
             return cls(aabb2.limits)
-        elif aabb2.limits is None:
+        if aabb2.limits is None:
             return cls(aabb1.limits)
-        else:
-            merged_limits = []
-            for lims1, lims2 in zip(aabb1, aabb2):
-                lb = min(lims1[0], lims2[0])
-                ub = max(lims1[1], lims2[1])
-                merged_limits.append((lb, ub))
-            return cls(merged_limits)
+
+        merged_limits = []
+        for lims1, lims2 in zip(aabb1, aabb2):
+            lower = min(lims1[0], lims2[0])
+            upper = max(lims1[1], lims2[1])
+            merged_limits.append((lower, upper))
+        return cls(merged_limits)
 
     @property
     def perimeter(self):
@@ -124,15 +122,16 @@ class AABB(object):
         if len(self) == 1:
             return 0
 
-        p = 0
+        perim = 0
         side_lens = [ub - lb for lb, ub in self]
-        for i in range(len(side_lens)):
+        n_dim = len(side_lens)
+        for i in range(n_dim):
             p_edge = 1
-            for j in range(len(side_lens)):
+            for j in range(n_dim):
                 if j != i:
                     p_edge *= side_lens[j]
-            p += p_edge
-        return 2 * p
+            perim += p_edge
+        return 2 * perim
 
     def overlaps(self, aabb):
         """Determine if two AABBs overlap
@@ -193,7 +192,6 @@ class AABBTree(object):
         return 'AABBTree(' + ', '.join(inp_strs) + ')'
 
     def __str__(self, n=0):
-        strs = []
         pre = n * '  '
 
         aabb_str = pre + 'AABB: '
@@ -298,15 +296,15 @@ class AABBTree(object):
         """
         if self.is_leaf:
             return self.aabb.overlaps(aabb)
-        else:
-            left_aabb_over = self.left.aabb.overlaps(aabb)
-            right_aabb_over = self.right.aabb.overlaps(aabb)
 
-            if left_aabb_over and self.left.does_overlap(aabb):
-                return True
-            if right_aabb_over and self.right.does_overlap(aabb):
-                return True
-            return False
+        left_aabb_over = self.left.aabb.overlaps(aabb)
+        right_aabb_over = self.right.aabb.overlaps(aabb)
+
+        if left_aabb_over and self.left.does_overlap(aabb):
+            return True
+        if right_aabb_over and self.right.does_overlap(aabb):
+            return True
+        return False
 
     def overlap_values(self, aabb):
         """Get values of overlapping AABBs

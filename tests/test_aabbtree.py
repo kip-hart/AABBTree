@@ -1,4 +1,5 @@
 import itertools
+from ast import literal_eval
 
 from aabb import AABB, AABBTree
 
@@ -51,8 +52,8 @@ def test_repr():
     tree.add(aabb3, 3.14)
     tree.add(aabb4)
 
-    assert tree == eval(repr(tree))
-    assert AABBTree() == eval(repr(AABBTree()))
+    assert tree == literal_eval(repr(tree))
+    assert AABBTree() == literal_eval(repr(AABBTree()))
 
 
 def test_eq():

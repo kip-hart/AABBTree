@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 from aabb import AABB
 
 
@@ -53,7 +55,7 @@ def test_str():
 def test_repr():
     line = [(2, 3)]
     aabb = AABB(line)
-    repr_aabb = eval(repr(aabb))
+    repr_aabb = literal_eval(repr(aabb))
 
     assert aabb == repr_aabb
 
