@@ -10,6 +10,7 @@ Welcome to AABBTree!
 
 .. Image of AABB Tree
 .. only:: html
+
     .. figure:: https://www.ncollide.org/img/AABB_tree_BVT.svg
       :scale: 50 %
       :alt: AABB Tree
