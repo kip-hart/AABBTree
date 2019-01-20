@@ -99,7 +99,7 @@ def test_add_merge():
         tree = AABBTree()
         for i in indices:
             tree.add(aabbs[i])
-        aab_merge(tree)
+        aabb_merge(tree)
 
 
 def aabb_merge(tree):
