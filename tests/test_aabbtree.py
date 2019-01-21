@@ -115,6 +115,9 @@ def test_does_overlap():
     aabb6 = AABB([(0, 1), (5, 6)])
     aabb7 = AABB([(6.5, 6.5), (5.5, 5.5)])
 
+    for aabb in (aabb5, aabb6, aabb7):
+        assert not AAABBTree().does_overlap(aabb)
+
     aabbs = standard_aabbs()
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
