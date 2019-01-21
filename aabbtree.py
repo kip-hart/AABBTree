@@ -141,6 +141,9 @@ class AABB(object):
         Returns:
             bool: Flag set to true if the two AABBs overlap
         """
+        if (self.limits is None) or (aabb.limits is None):
+            return False
+
         for lims1, lims2 in zip(self, aabb):
             min1, max1 = lims1
             min2, max2 = lims2
