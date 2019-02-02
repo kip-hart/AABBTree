@@ -292,14 +292,6 @@ class AABBTree(object):
         else:
             return 1 + max(self.left.depth, self.right.depth)
 
-    @property
-    def total_volume(self):
-        vol = self.aabb.volume
-        if not self.is_leaf:
-            vol += self.left.total_volume
-            vol += self.right.total_volume
-        return vol
-
     def add(self, aabb, value=None, method='volume'):
         r"""Add node to tree
 
