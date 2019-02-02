@@ -105,7 +105,7 @@ class AABB(object):
 
     @property
     def perimeter(self):
-        r"""Perimeter of AABB
+        r"""float: perimeter of AABB
 
         The perimeter :math:`p_n` of an AABB with side lengths
         :math:`l_1 \ldots l_n` is:
@@ -132,6 +132,14 @@ class AABB(object):
             perim += p_edge
         return 2 * perim
 
+    @property
+    def volume(self):
+        """float: volume of AABB"""
+        vol = 1
+        for lb, ub in self:
+            vol *= ub - lb
+        return vol
+
     def overlaps(self, aabb):
         """Determine if two AABBs overlap
 
@@ -152,6 +160,38 @@ class AABB(object):
             if not overlaps:
                 return False
         return True
+
+    def overlap_volume(self, aabb):
+        r"""Determine volume of overlap between AABBs
+
+        Let :math:`(x_i^l, x_i^u)` be the i-th dimension
+        lower and upper bounds for AABB 1, and
+        let :math:`(y_i^l, y_i^u)` be the lower and upper bounds for
+        AABB 2. The volume of overlap is:
+
+        .. math::
+
+            V = \prod_{i=1}^n \text{max}(0, \text{min}(x_i^u, y_i^u) - \text{max}(x_i^l, y_i^l))
+
+        Args:
+            aabb (AABB): The AABB to calculate for overlap volume
+
+        Returns:
+            float: Volume of overlap
+        """  # NOQA: E501
+
+        volume = 1
+        for lims1, lims2 in zip(self, aabb):
+            min1, max1 = lims1
+            min2, max2 = lims2
+
+            overlap_min = max(min1, min2)
+            overlap_max = min(max1, max2)
+            if overlap_min >= overlap_max:
+                return 0
+
+            volume *= overlap_max - overlap_min
+        return volume
 
 
 class AABBTree(object):
@@ -233,20 +273,83 @@ class AABBTree(object):
     def __ne__(self, aabbtree):
         return not self.__eq__(aabbtree)
 
+    def __len__(self):
+        if self.is_leaf:
+            return int(self.aabb != AABB())
+        else:
+            return len(self.left) + len(self.right)
+
     @property
     def is_leaf(self):
         """bool: returns True if is leaf node"""
         return (self.left is None) and (self.right is None)
 
-    def add(self, aabb, value=None):
-        """Add node to tree
+    @property
+    def depth(self):
+        """int: Depth of the tree"""
+        if self.is_leaf:
+            return 0
+        else:
+            return 1 + max(self.left.depth, self.right.depth)
+
+    def add(self, aabb, value=None, method='volume'):
+        r"""Add node to tree
 
         This function inserts a node into the AABB tree.
+        The function chooses one of three options for adding the node to
+        the tree:
+
+            * Add it to the left side
+            * Add it to the right side
+            * Become a leaf node
+
+        The cost of each option is calculated based on the *method* keyword,
+        and the option with the lowest cost is chosen.
 
         Args:
             aabb (AABB): The AABB to add.
             value: The value associated with the AABB. Defaults to None.
-        """
+            method (str): The method for deciding how to build the tree.
+                Should be one of the following:
+
+                    * 'volume'
+
+                **'volume'**
+                *Costs based on total bounding volume and overlap volume*
+
+                Let :math:`b` denote the tree, :math:`l` denote the left
+                branch, :math:`r` denote the right branch, :math:`x` denote
+                the AABB to add, and math:`V` be the volume of an AABB.
+                The cost associated with each of these options is:
+
+                .. math::
+
+                    C(\text{add left})  &= V(b \cup x) - V(b) + V(l \cup x) - V(l) + V((l \cup x) \cap r) \\
+                    C(\text{add right}) &= V(b \cup x) - V(b) + V(r \cup x) - V(r) + V((r \cup x) \cap l) \\
+                    C(\text{leaf})      &= V(b \cup x) + V(b \cap x)
+
+                The first two terms in the 'add left' cost represent the change
+                in volume for the tree. The next two terms give the change in
+                volume for the left branch specifically (right branch is
+                unchanged). The final term is the amount of overlap that would
+                be between the new left branch and the right branch.
+
+                This cost function includes the increases in bounding volumes and
+                the amount of overlap- two values a balanced AABB tree should minimize.
+
+                The 'add right' cost is a mirror opposite of the 'add left cost'.
+                The 'leaf' cost is the added bounding volume plus a penalty for
+                overlapping with the existing tree.
+
+                These costs suit the author's current needs.
+                Other applications, such as raytracing, are more concerned
+                with surface area than volume. Please visit the
+                `AABBTree repository`_ if you are interested in implementing
+                another cost function.
+
+        .. _`AABBTree repository`: https://github.com/kip-hart/AABBTree
+
+        """  # NOQA: E501
         if self.aabb == AABB():
             self.aabb = aabb
             self.value = value
@@ -258,27 +361,38 @@ class AABBTree(object):
             self.aabb = AABB.merge(self.aabb, aabb)
             self.value = None
         else:
-            tree_p = self.aabb.perimeter
-            tree_merge_p = AABB.merge(self.aabb, aabb).perimeter
+            if method == 'volume':
+                # Define merged AABBs
+                branch_merge = AABB.merge(self.aabb, aabb)
+                left_merge = AABB.merge(self.left.aabb, aabb)
+                right_merge = AABB.merge(self.right.aabb, aabb)
 
-            new_parent_cost = 2 * tree_merge_p
-            min_pushdown_cost = 2 * (tree_merge_p - tree_p)
+                # Calculate the change in the sum of the bounding volumes
+                branch_bnd_cost = branch_merge.volume
 
-            left_merge_p = AABB.merge(self.left.aabb, aabb).perimeter
-            cost_left = left_merge_p + min_pushdown_cost
-            if not self.left.is_leaf:
-                cost_left -= self.left.aabb.perimeter
+                left_bnd_cost = branch_merge.volume - self.aabb.volume
+                left_bnd_cost += left_merge.volume - self.left.aabb.volume
 
-            right_merge_p = AABB.merge(self.right.aabb, aabb).perimeter
-            cost_right = right_merge_p + min_pushdown_cost
-            if not self.right.is_leaf:
-                cost_right -= self.right.aabb.perimeter
+                right_bnd_cost = branch_merge.volume - self.aabb.volume
+                right_bnd_cost += right_merge.volume - self.right.aabb.volume
 
-            if new_parent_cost < min(cost_left, cost_right):
+                # Calculate amount of overlap
+                branch_olap_cost = self.aabb.overlap_volume(aabb)
+                left_olap_cost = left_merge.overlap_volume(self.right.aabb)
+                right_olap_cost = right_merge.overlap_volume(self.left.aabb)
+
+                # Calculate total cost
+                branch_cost = branch_bnd_cost + branch_olap_cost
+                left_cost = left_bnd_cost + left_olap_cost
+                right_cost = right_bnd_cost + right_olap_cost
+            else:
+                raise ValueError('Unrecognized method: ' + str(method))
+
+            if branch_cost < left_cost and branch_cost < right_cost:
                 self.left = copy.deepcopy(self)
                 self.right = AABBTree(aabb, value)
                 self.value = None
-            elif cost_left < cost_right:
+            elif left_cost < right_cost:
                 self.left.add(aabb, value)
             else:
                 self.right.add(aabb, value)

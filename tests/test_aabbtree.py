@@ -1,5 +1,7 @@
 import itertools
 
+import pytest
+
 from aabbtree import AABB
 from aabbtree import AABBTree
 
@@ -22,30 +24,12 @@ def test_init():
     assert tree2.right == tree
 
 
-def test_str():
+def test_empty_str():
     empty_str = 'AABB: None\nValue: None\nLeft: None\nRight: None'
     assert str(AABBTree()) == empty_str
 
-    aabb1, aabb2, aabb3, aabb4 = standard_aabbs()
-    tree = AABBTree()
-    tree.add(aabb1, 'x')
-    tree.add(aabb2, 'y')
-    tree.add(aabb3, 3.14)
-    tree.add(aabb4)
-    full_str = 'AABB: [(0, 8), (0, 6)]\nValue: None\nLeft:\n  AABB: [(0, 1), (0, 1)]\n  Value: x\n  Left: None\n  Right: None\nRight:\n  AABB: [(3, 8), (0, 6)]\n  Value: None\n  Left:\n    AABB: [(3, 4), (0, 1)]\n    Value: y\n    Left: None\n    Right: None\n  Right:\n    AABB: [(5, 8), (5, 6)]\n    Value: None\n    Left:\n      AABB: [(5, 6), (5, 6)]\n      Value: 3.14\n      Left: None\n      Right: None\n    Right:\n      AABB: [(7, 8), (5, 6)]\n      Value: None\n      Left: None\n      Right: None'  # NOQA: E501
-    assert str(tree) == full_str
 
-
-def test_repr():
-    aabb1, aabb2, aabb3, aabb4 = standard_aabbs()
-
-    tree = AABBTree()
-    tree.add(aabb1, 'x')
-    tree.add(aabb2, 'y')
-    tree.add(aabb3, 3.14)
-    tree.add(aabb4)
-
-    assert repr(tree) == "AABBTree(aabb=AABB([(0, 8), (0, 6)]), left=AABBTree(aabb=AABB([(0, 1), (0, 1)]), value='x'), right=AABBTree(aabb=AABB([(3, 8), (0, 6)]), left=AABBTree(aabb=AABB([(3, 4), (0, 1)]), value='y'), right=AABBTree(aabb=AABB([(5, 8), (5, 6)]), left=AABBTree(aabb=AABB([(5, 6), (5, 6)]), value=3.14), right=AABBTree(aabb=AABB([(7, 8), (5, 6)])))))"  # NOQA: E501
+def test_empty_repr():
     assert repr(AABBTree()) == 'AABBTree()'
 
 
@@ -73,6 +57,15 @@ def test_eq():
     assert not tree2 == tree
 
 
+def test_len():
+    tree = AABBTree()
+    assert len(tree) == 0
+
+    for i, aabb in enumerate(standard_aabbs()):
+        tree.add(aabb)
+        assert len(tree) == i + 1
+
+
 def test_is_leaf():
     assert AABBTree().is_leaf
     assert AABBTree(AABB([(2, 5)])).is_leaf
@@ -92,6 +85,13 @@ def test_add():
     tree2 = AABBTree(aabb)
     assert tree == tree2
     assert AABBTree() != tree
+
+
+def test_add_raises():
+    tree = AABBTree()
+    with pytest.raises(ValueError):
+        for aabb in standard_aabbs():
+            tree.add(aabb, method=3.14)
 
 
 def test_add_merge():
