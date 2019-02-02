@@ -1,5 +1,7 @@
 import itertools
 
+import pytest
+
 from aabbtree import AABB
 from aabbtree import AABBTree
 
@@ -55,6 +57,15 @@ def test_eq():
     assert not tree2 == tree
 
 
+def test_len():
+    tree = AABBTree()
+    assert len(tree) == 0
+
+    for i, aabb in enumerate(standard_aabbs()):
+        tree.add(aabb)
+        assert len(tree) == i + 1
+
+
 def test_is_leaf():
     assert AABBTree().is_leaf
     assert AABBTree(AABB([(2, 5)])).is_leaf
@@ -74,6 +85,13 @@ def test_add():
     tree2 = AABBTree(aabb)
     assert tree == tree2
     assert AABBTree() != tree
+
+
+def test_add_raises():
+    tree = AABBTree()
+    with pytest.raises(ValueError):
+        for aabb in standard_aabbs():
+            tree.add(aabb, method=3.14)
 
 
 def test_add_merge():
