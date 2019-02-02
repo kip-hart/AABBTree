@@ -275,7 +275,7 @@ class AABBTree(object):
 
     def __len__(self):
         if self.is_leaf:
-            return 1
+            return int(self.aabb != AABB())
         else:
             return len(self.left) + len(self.right)
 
@@ -341,7 +341,7 @@ class AABBTree(object):
                 The 'leaf' cost is the added bounding volume plus a penalty for
                 overlapping with the existing tree.
 
-                These costs best suit the author's current needs.
+                These costs suit the author's current needs.
                 Other applications, such as raytracing, are more concerned
                 with surface area than volume. Please visit the
                 `GitHub repository`_ if you are interested in implementing
