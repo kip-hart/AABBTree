@@ -344,10 +344,10 @@ class AABBTree(object):
                 These costs suit the author's current needs.
                 Other applications, such as raytracing, are more concerned
                 with surface area than volume. Please visit the
-                `GitHub repository`_ if you are interested in implementing
+                `AABBTree repository`_ if you are interested in implementing
                 another cost function.
 
-        .. _`GitHub repository`: https://github.com/kip-hart/AABBTree
+        .. _`AABBTree repository`: https://github.com/kip-hart/AABBTree
 
         """  # NOQA: E501
         if self.aabb == AABB():
