@@ -23,8 +23,10 @@ class AABB(object):
     def __init__(self, limits=None):
         if limits is not None:
             for lims in limits:
-                assert len(lims) == 2
-                assert lims[0] <= lims[1]
+                if len(lims) != 2 or lims[0] > lims[1]:
+                    e_str = 'Limits not in (lower, upper) format: '
+                    e_str += str(lims)
+                    raise ValueError(e_str)
 
         self.limits = limits
         self._i = 0

@@ -1,3 +1,5 @@
+import pytest
+
 from aabbtree import AABB
 
 
@@ -12,6 +14,12 @@ def test_init():
         assert lims_box[1] == lims_aabb[1]
 
     assert AABB().limits is None
+
+    box2 = [(-4, -10)]
+    box3 = [(1, 2, 3)]
+    for bad_box in (box2, box3):
+        with pytest.raises(ValueError):
+            AABB(bad_box)
 
 
 def test_eq():
@@ -68,6 +76,9 @@ def test_merge():
     assert aabb2 == AABB.merge(AABB(), aabb2)
     assert AABB() == AABB.merge(AABB(), AABB())
 
+    aabb3 = AABB([(-1, 0), (2, 3), (1, 5)])
+    with pytest.raises(ValueError):
+        AABB.merge(aabb1, aabb3)
 
 def test_perimeter():
     # 1D
