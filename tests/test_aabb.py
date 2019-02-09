@@ -80,6 +80,7 @@ def test_merge():
     with pytest.raises(ValueError):
         AABB.merge(aabb1, aabb3)
 
+
 def test_perimeter():
     # 1D
     assert AABB([(0, 1)]).perimeter == 0

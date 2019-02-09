@@ -15,4 +15,6 @@ include tox.ini
 prune docs/source/_static
 prune docs/build
 
+exclude plot_incremental.py
+
 global-exclude *.py[cod] __pycache__ *.so *.dylib .DS_Store *.log Icon*
