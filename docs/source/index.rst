@@ -9,13 +9,13 @@ Welcome to AABBTree!
     :end-before: .. end-introduction
 
 .. Image of AABB Tree
-.. figure:: _static/AABB_tree_BVT.*
-  :scale: 50 %
+.. figure:: _static/diagram.png
   :alt: AABB Tree
   :align: center
 
-  Objects organized into an AABB tree.
-  Image Credit: ncollide, `Bounding Volumes`_.
+  Left: An AABB tree, leaves numbered by insertion order.
+  Right: The AABBs and their bounding boxes.
+
 
 .. Installation and example sections
 .. include:: ../../README.rst

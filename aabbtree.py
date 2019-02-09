@@ -5,7 +5,7 @@ __author__ = 'Kenneth (Kip) Hart'
 
 
 class AABB(object):
-    """Axis aligned bounding box (AABB)
+    """Axis-aligned bounding box (AABB)
 
     The AABB is a d-dimensional box.
 
@@ -23,8 +23,10 @@ class AABB(object):
     def __init__(self, limits=None):
         if limits is not None:
             for lims in limits:
-                assert len(lims) == 2
-                assert lims[0] <= lims[1]
+                if len(lims) != 2 or lims[0] > lims[1]:
+                    e_str = 'Limits not in (lower, upper) format: '
+                    e_str += str(lims)
+                    raise ValueError(e_str)
 
         self.limits = limits
         self._i = 0
@@ -96,10 +98,16 @@ class AABB(object):
         if aabb2.limits is None:
             return cls(aabb1.limits)
 
+        if len(aabb1) != len(aabb2):
+            e_str = 'AABBs of different dimensions: ' + str(len(aabb1))
+            e_str += ' and ' + str(len(aabb2))
+            raise ValueError(e_str)
+
         merged_limits = []
-        for lims1, lims2 in zip(aabb1, aabb2):
-            lower = min(lims1[0], lims2[0])
-            upper = max(lims1[1], lims2[1])
+        n = len(aabb1)
+        for i in range(n):
+            lower = min(aabb1[i][0], aabb2[i][0])
+            upper = max(aabb1[i][1], aabb2[i][1])
             merged_limits.append((lower, upper))
         return cls(merged_limits)
 
@@ -195,12 +203,9 @@ class AABB(object):
 
 
 class AABBTree(object):
-    """Python Implementation of the AABB Tree
+    """Static AABB Tree
 
-    This is a pure Python implementation of the static d-dimensional AABB tree.
-    It is heavily based on
-    `Introductory Guide to AABB Tree Collision Detection`_
-    from *Azure From The Trenches*.
+    An AABB tree where the bounds of each AABB do not change.
 
     Args:
         aabb (AABB): An AABB
@@ -208,7 +213,6 @@ class AABBTree(object):
         left (AABBTree, optional): The left branch of the tree
         right (AABBTree, optional): The right branch of the tree
 
-    .. _`Introductory Guide to AABB Tree Collision Detection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
     """  # NOQA: E501
     def __init__(self, aabb=AABB(), value=None, left=None, right=None):
 
