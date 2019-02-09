@@ -96,10 +96,15 @@ class AABB(object):
         if aabb2.limits is None:
             return cls(aabb1.limits)
 
+        if len(aabb1) != len(aabb2):
+            e_str = 'AABBs of different dimensions: ' + str(len(aabb1))
+            e_str += ' and ' + str(len(aabb2))
+            raise ValueError(e_str)
+
         merged_limits = []
-        for lims1, lims2 in zip(aabb1, aabb2):
-            lower = min(lims1[0], lims2[0])
-            upper = max(lims1[1], lims2[1])
+        for i in range(len(aabb1)):
+            lower = min(aabb1[i][0], aabb2[i][0])
+            upper = max(aabb1[i][1], aabb2[i][1])
             merged_limits.append((lower, upper))
         return cls(merged_limits)
 
