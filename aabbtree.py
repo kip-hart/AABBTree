@@ -104,7 +104,8 @@ class AABB(object):
             raise ValueError(e_str)
 
         merged_limits = []
-        for i in range(len(aabb1)):
+        n = len(aabb1)
+        for i in range(n):
             lower = min(aabb1[i][0], aabb2[i][0])
             upper = max(aabb1[i][1], aabb2[i][1])
             merged_limits.append((lower, upper))
