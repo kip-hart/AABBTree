@@ -12,6 +12,14 @@ from *Azure From The Trenches*.
 
 .. end-introduction
 
+.. figure:: https://aabbtree.readthedocs.io/en/latest/_images/diagram.png
+    :alt: AABB Tree
+    :align: center
+
+    Left: An AABB tree, leaves numbered by insertion order.
+    Right: The AABBs and their bounding boxes.
+
+.. begin-installation
 
 Installation
 ============

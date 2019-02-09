@@ -19,7 +19,7 @@ Welcome to AABBTree!
 
 .. Installation and example sections
 .. include:: ../../README.rst
-  :start-after: .. end-introduction
+  :start-after: .. begin-installation
   :end-before: .. begin-documentation
 
 .. API
