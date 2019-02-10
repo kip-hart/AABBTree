@@ -29,5 +29,3 @@
 .. admonition:: License
 
   .. include:: ../../LICENSE.rst
-
-.. _`Bounding Volumes`: https://www.ncollide.org/bounding_volumes
