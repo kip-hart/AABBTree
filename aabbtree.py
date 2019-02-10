@@ -142,7 +142,19 @@ class AABB(object):
 
     @property
     def volume(self):
-        """float: volume of AABB"""
+        r"""float: volume of AABB
+
+        The volume :math:`V_n` of an AABB with side lengths
+        :math:`l_1 \ldots l_n` is:
+
+        .. math::
+
+            V_1 &= l_1 \\
+            V_2 &= l_1 l_2 \\
+            V_3 &= l_1 l_2 l_3 \\
+            V_n &= \prod_{i=1}^n l_i
+
+        """
         vol = 1
         for lb, ub in self:
             vol *= ub - lb
@@ -172,14 +184,17 @@ class AABB(object):
     def overlap_volume(self, aabb):
         r"""Determine volume of overlap between AABBs
 
-        Let :math:`(x_i^l, x_i^u)` be the i-th dimension
-        lower and upper bounds for AABB 1, and
-        let :math:`(y_i^l, y_i^u)` be the lower and upper bounds for
-        AABB 2. The volume of overlap is:
+        Let :math:`\left(l_i^{(1)}, u_i^{(1)}\right)` be the i-th dimension
+        lower and upper bounds for AABB 1, and let
+        :math:`\left(l_i^{(2)}, u_i^{(2)}\right)` be the lower and upper bounds
+        for AABB 2. The volume of overlap is:
 
         .. math::
 
-            V = \prod_{i=1}^n \text{max}(0, \text{min}(x_i^u, y_i^u) - \text{max}(x_i^l, y_i^l))
+            V = \prod_{i=1}^n \text{max}\left(0,
+                \text{min}\left(u_i^{(1)}, u_i^{(2)}\right) -
+                \text{max}\left(l_i^{(1)}, l_i^{(2)}\right)
+                \right)
 
         Args:
             aabb (AABB): The AABB to calculate for overlap volume
@@ -316,40 +331,43 @@ class AABBTree(object):
             method (str): The method for deciding how to build the tree.
                 Should be one of the following:
 
-                    * 'volume'
+                    * volume
 
-                **'volume'**
+                **volume**
                 *Costs based on total bounding volume and overlap volume*
 
-                Let :math:`b` denote the tree, :math:`l` denote the left
-                branch, :math:`r` denote the right branch, :math:`x` denote
-                the AABB to add, and math:`V` be the volume of an AABB.
+                Let :math:`p` denote the parent, :math:`l` denote the left
+                child, :math:`r` denote the right child, :math:`x` denote
+                the AABB to add, and :math:`V` be the volume of an AABB.
+                The three options to add :math:`x` to the left branch, add it
+                to the right branch, or create a new parent.
                 The cost associated with each of these options is:
 
                 .. math::
 
-                    C(\text{add left})  &= V(b \cup x) - V(b) + V(l \cup x) - V(l) + V((l \cup x) \cap r) \\
-                    C(\text{add right}) &= V(b \cup x) - V(b) + V(r \cup x) - V(r) + V((r \cup x) \cap l) \\
-                    C(\text{leaf})      &= V(b \cup x) + V(b \cap x)
+                    C(\text{add left})      &= V(p \cup x) - V(p) +
+                                               V(l \cup x) - V(l) +
+                                               V((l \cup x) \cap r) \\
+                    C(\text{add right})     &= V(p \cup x) - V(p) +
+                                               V(r \cup x) - V(r) +
+                                               V((r \cup x) \cap l) \\
+                    C(\text{create parent}) &= V(p \cup x) + V(p \cap x)
 
-                The first two terms in the 'add left' cost represent the change
-                in volume for the tree. The next two terms give the change in
-                volume for the left branch specifically (right branch is
-                unchanged). The final term is the amount of overlap that would
-                be between the new left branch and the right branch.
+                In the add-left cost, the term :math:`V(b \cup x) - V(b)` is
+                the increase in parent bounding volume. The cost
+                :math:`V(l \cup x) - V(l)` is the increase in left child
+                bounding volume. The last term, :math:`V((l \cup x) \cap r)`
+                is the overlapping volume between children if :math:`x` were
+                added to the left child.
+                The cost to create a new parent is the bounding volume of the
+                parent and :math:`x` plus their overlap volume.
 
-                This cost function includes the increases in bounding volumes and
-                the amount of overlap- two values a balanced AABB tree should minimize.
-
-                The 'add right' cost is a mirror opposite of the 'add left cost'.
-                The 'leaf' cost is the added bounding volume plus a penalty for
-                overlapping with the existing tree.
-
-                These costs suit the author's current needs.
-                Other applications, such as raytracing, are more concerned
-                with surface area than volume. Please visit the
-                `AABBTree repository`_ if you are interested in implementing
-                another cost function.
+                This cost function includes the increases in bounding volumes
+                and the amount of overlap- two values a balanced AABB tree
+                should minimize. The cost function suits the author's current
+                needs, though other applications may seek different tree
+                properties. Please visit the `AABBTree repository`_ if
+                interested in implementing another cost function.
 
         .. _`AABBTree repository`: https://github.com/kip-hart/AABBTree
 

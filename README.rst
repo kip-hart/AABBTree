@@ -1,9 +1,15 @@
-AABBTree
-========
-
 .. begin-introduction
 
-|s-pver| |s-travis| |s-cov| |s-docs| |s-license|
+AABBTree - Axis-Aligned Bounding Box Trees
+==========================================
+
+|s-travis|
+|s-cov|
+|s-license|
+
+|l-github| `Repository`_
+|l-rtd| `Documentation`_
+|l-pypi| `PyPI`_
 
 AABBTree is a pure Python implementation of a static d-dimensional
 axis aligned bounding box (AABB) tree. It is inspired by
@@ -105,12 +111,15 @@ the MIT license.
 
 .. |copy| unicode:: 0xA9 .. copyright sign
 .. _`AABBTree repository` : https://github.com/kip-hart/AABBTree
+.. _`Repository` : https://github.com/kip-hart/AABBTree
+.. _`Documentation` : https://aabbtree.readthedocs.io
+.. _`PyPI` : https://pypi.org/project/aabbtree/
 .. _`Introductory Guide to AABB Tree Collision Detection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
 .. |s-license| image:: https://img.shields.io/pypi/l/aabbtree.svg
     :target: https://github.com/kip-hart/AABBTree/blob/master/LICENSE.rst
     :alt: License
 .. |s-docs| image:: https://readthedocs.org/projects/aabbtree/badge/?version=latest
-    :target: https://aabbtree.readthedocs.io/en/latest/?badge=latest
+    :target: https://aabbtree.readthedocs.io
     :alt: Documentation Status
 .. |s-travis| image:: https://travis-ci.org/kip-hart/AABBTree.svg?branch=master
     :target: https://travis-ci.org/kip-hart/AABBTree
@@ -119,5 +128,17 @@ the MIT license.
     :target: https://coveralls.io/github/kip-hart/AABBTree?branch=master
     :alt: Coverage
 .. |s-pver| image:: https://img.shields.io/pypi/v/aabbtree.svg
+    :target: https://pypi.org/project/aabbtree/
+    :alt: PyPI
+
+.. |l-github| image:: https://api.iconify.design/octicon:mark-github.svg?color=black0&inline=true&height=16
+    :target: https://github.com/kip-hart/AABBTree
+    :alt: GitHub
+
+.. |l-rtd| image:: https://api.iconify.design/simple-icons:readthedocs.svg?color=black&inline=true&height=16
+    :target: https://aabbtree.readthedocs.io
+    :alt: ReadTheDocs
+
+.. |l-pypi| image:: https://api.iconify.design/mdi:cube-outline.svg?color=black&inline=true&height=16
     :target: https://pypi.org/project/aabbtree/
     :alt: PyPI
