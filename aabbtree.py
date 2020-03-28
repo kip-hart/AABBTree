@@ -160,6 +160,21 @@ class AABB(object):
             vol *= ub - lb
         return vol
 
+    @property
+    def corners(self):
+        """list: corner points of AABB"""
+
+        n_dim = len(self.limits)
+        f = '{:0' + str(n_dim) + 'b}'
+
+        n_corners = 2 ** n_dim
+        corners = []
+        for i in range(n_corners):
+            inds = [int(s) for s in f.format(i)]  # convert i to binary list
+            corner = [self.limits[d][ind] for d, ind in enumerate(inds)]
+            corners.append(corner)
+        return corners
+
     def overlaps(self, aabb):
         """Determine if two AABBs overlap
 
