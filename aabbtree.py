@@ -1,4 +1,5 @@
 import copy
+from collections import deque
 
 __all__ = ['AABB', 'AABBTree']
 __author__ = 'Kenneth (Kip) Hart'
@@ -66,10 +67,10 @@ class AABB(object):
             return True
         if (self.limits is None) or (aabb.limits is None):
             return False
-        if len(self) != len(aabb):
+        if len(self.limits) != len(aabb.limits):
             return False
 
-        for i, lims1 in enumerate(self):
+        for i, lims1 in enumerate(self.limits):
             lims2 = aabb[i]
             if (lims1[0] != lims2[0]) or (lims1[1] != lims2[1]):
                 return False
@@ -98,18 +99,12 @@ class AABB(object):
         if aabb2.limits is None:
             return cls(aabb1.limits)
 
-        if len(aabb1) != len(aabb2):
+        if len(aabb1.limits) != len(aabb2.limits):
             e_str = 'AABBs of different dimensions: ' + str(len(aabb1))
             e_str += ' and ' + str(len(aabb2))
             raise ValueError(e_str)
 
-        merged_limits = []
-        n = len(aabb1)
-        for i in range(n):
-            lower = min(aabb1[i][0], aabb2[i][0])
-            upper = max(aabb1[i][1], aabb2[i][1])
-            merged_limits.append((lower, upper))
-        return cls(merged_limits)
+        return cls([_merge(*lims) for lims in zip(aabb1.limits, aabb2.limits)])
 
     @property
     def perimeter(self):
@@ -126,11 +121,11 @@ class AABB(object):
             p_n &= 2 \sum_{i=1}^n \prod_{j=1\neq i}^n l_j
 
         """
-        if len(self) == 1:
+        if len(self.limits) == 1:
             return 0
 
         perim = 0
-        side_lens = [ub - lb for lb, ub in self]
+        side_lens = [ub - lb for lb, ub in self.limits]
         n_dim = len(side_lens)
         for i in range(n_dim):
             p_edge = 1
@@ -156,7 +151,7 @@ class AABB(object):
 
         """
         vol = 1
-        for lb, ub in self:
+        for lb, ub in self.limits:
             vol *= ub - lb
         return vol
 
@@ -187,12 +182,10 @@ class AABB(object):
         if (self.limits is None) or (aabb.limits is None):
             return False
 
-        for lims1, lims2 in zip(self, aabb):
-            min1, max1 = lims1
-            min2, max2 = lims2
-
-            overlaps = (max1 >= min2) and (min1 <= max2)
-            if not overlaps:
+        for (min1, max1), (min2, max2) in zip(self.limits, aabb.limits):
+            if min1 >= max2:
+                return False
+            if min2 >= max1:
                 return False
         return True
 
@@ -219,10 +212,7 @@ class AABB(object):
         """  # NOQA: E501
 
         volume = 1
-        for lims1, lims2 in zip(self, aabb):
-            min1, max1 = lims1
-            min2, max2 = lims2
-
+        for (min1, max1), (min2, max2) in zip(self.limits, aabb.limits):
             overlap_min = max(min1, min2)
             overlap_max = min(max1, max2)
             if overlap_min >= overlap_max:
@@ -435,7 +425,7 @@ class AABBTree(object):
                 self.right.add(aabb, value)
             self.aabb = AABB.merge(self.left.aabb, self.right.aabb)
 
-    def does_overlap(self, aabb):
+    def does_overlap(self, aabb, method='DFS'):
         """Check for overlap
 
         This function checks if the limits overlap any leaf nodes in the tree.
@@ -443,42 +433,89 @@ class AABBTree(object):
 
         Args:
             aabb (AABB): The AABB to check.
+            method (str): {'DFS'|'BFS'} Method for traversing the tree.
+                Setting 'DFS' performs a depth-first search and 'BFS' performs
+                a breadth-first search. Defaults to 'DFS'.
 
         Returns:
             bool: True if overlaps with a leaf node of tree.
         """
-        if self.is_leaf:
-            return self.aabb.overlaps(aabb)
+        if method == 'DFS':
+            if self.is_leaf:
+                return self.aabb.overlaps(aabb)
 
-        left_aabb_over = self.left.aabb.overlaps(aabb)
-        right_aabb_over = self.right.aabb.overlaps(aabb)
+            left_aabb_over = self.left.aabb.overlaps(aabb)
+            right_aabb_over = self.right.aabb.overlaps(aabb)
 
-        if left_aabb_over and self.left.does_overlap(aabb):
-            return True
-        if right_aabb_over and self.right.does_overlap(aabb):
-            return True
-        return False
+            if left_aabb_over and self.left.does_overlap(aabb):
+                return True
+            if right_aabb_over and self.right.does_overlap(aabb):
+                return True
+            return False
 
-    def overlap_values(self, aabb):
+        if method == 'BFS':
+            q = deque()
+            q.append(self)
+            while len(q) > 0:
+                node = q.popleft()
+                overlaps = node.aabb.overlaps(aabb)
+                if overlaps and node.is_leaf:
+                    return True
+                if overlaps:
+                    q.append(node.left)
+                    q.append(node.right)
+            return False
+
+        e_str = "method should be 'DFS' or 'BFS', not " + str(method)
+        raise ValueError(e_str)
+
+    def overlap_values(self, aabb, method='DFS'):
         """Get values of overlapping AABBs
 
         This function gets the value field of each overlapping AABB.
 
         Args:
             aabb (AABB): The AABB to check.
+            method (str): {'DFS'|'BFS'} Method for traversing the tree.
+                Setting 'DFS' performs a depth-first search and 'BFS' performs
+                a breadth-first search. Defaults to 'DFS'.
 
         Returns:
             list: Value fields of each node that overlaps.
         """
         values = []
-        if self.is_leaf and self.does_overlap(aabb):
-            values.append(self.value)
-        elif self.is_leaf:
-            pass
-        else:
-            if self.left.aabb.overlaps(aabb):
-                values.extend(self.left.overlap_values(aabb))
 
-            if self.right.aabb.overlaps(aabb):
-                values.extend(self.right.overlap_values(aabb))
+        if method == 'DFS':
+            is_leaf = self.is_leaf
+            if is_leaf and self.does_overlap(aabb):
+                values.append(self.value)
+            elif is_leaf:
+                pass
+            else:
+                if self.left.aabb.overlaps(aabb):
+                    values.extend(self.left.overlap_values(aabb))
+
+                if self.right.aabb.overlaps(aabb):
+                    values.extend(self.right.overlap_values(aabb))
+        elif method == 'BFS':
+            q = deque()
+            q.append(self)
+            while len(q) > 0:
+                node = q.popleft()
+                if node.aabb.overlaps(aabb):
+                    if node.is_leaf:
+                        values.append(node.value)
+                    else:
+                        q.append(node.left)
+                        q.append(node.right)
+        else:
+            e_str = "method should be 'DFS' or 'BFS', not " + str(method)
+            raise ValueError(e_str)
         return values
+
+
+def _merge(lims1, lims2):
+    lb = min(lims1[0], lims2[0])
+    ub = max(lims1[1], lims2[1])
+
+    return (lb, ub)
