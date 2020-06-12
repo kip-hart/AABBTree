@@ -469,6 +469,50 @@ class AABBTree(object):
         e_str = "method should be 'DFS' or 'BFS', not " + str(method)
         raise ValueError(e_str)
 
+    def overlap_aabbs(self, aabb, method='DFS'):
+        """Get overlapping AABBs
+
+        This function gets each overlapping AABB.
+
+        Args:
+            aabb (AABB): The AABB to check.
+            method (str): {'DFS'|'BFS'} Method for traversing the tree.
+                Setting 'DFS' performs a depth-first search and 'BFS' performs
+                a breadth-first search. Defaults to 'DFS'.
+
+        Returns:
+            list: AABB objects in AABBTree that overlap with the input.
+        """
+        aabbs = []
+
+        if method == 'DFS':
+            is_leaf = self.is_leaf
+            if is_leaf and self.does_overlap(aabb):
+                aabbs.append(self.aabb)
+            elif is_leaf:
+                pass
+            else:
+                if self.left.aabb.overlaps(aabb):
+                    aabbs.extend(self.left.overlap_aabbs(aabb))
+
+                if self.right.aabb.overlaps(aabb):
+                    aabbs.extend(self.right.overlap_aabbs(aabb))
+        elif method == 'BFS':
+            q = deque()
+            q.append(self)
+            while len(q) > 0:
+                node = q.popleft()
+                if node.aabb.overlaps(aabb):
+                    if node.is_leaf:
+                        aabbs.append(node.aabb)
+                    else:
+                        q.append(node.left)
+                        q.append(node.right)
+        else:
+            e_str = "method should be 'DFS' or 'BFS', not " + str(method)
+            raise ValueError(e_str)
+        return values
+
     def overlap_values(self, aabb, method='DFS'):
         """Get values of overlapping AABBs
 
