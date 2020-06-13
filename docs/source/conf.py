@@ -20,13 +20,13 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'AABBTree'
-copyright = '2019, Georgia Tech Research Corporation'
+copyright = '2020, Georgia Tech Research Corporation'
 author = 'Kenneth Hart'
 
 # The short X.Y version
-version = '2.4'
+version = '2.5'
 # The full version, including alpha/beta/rc tags
-release = '2.4.0'
+release = '2.5.0'
 
 
 # -- General configuration ---------------------------------------------------
