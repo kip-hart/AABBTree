@@ -1,7 +1,7 @@
 graft docs
 graft tests
 
-include aabb.py
+include aabbtree.py
 
 include .bumpversion.cfg
 include .coveragerc
