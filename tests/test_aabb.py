@@ -106,3 +106,21 @@ def test_overlaps():
     assert aabb2.overlaps(aabb1)
     assert not aabb3.overlaps(aabb2)
     assert not aabb2.overlaps(aabb3)
+
+
+def test_corners():
+    lims = [(0, 10), (5, 10)]
+    aabb_corners = [
+        [lims[0][0], lims[1][0]],
+        [lims[0][1], lims[1][0]],
+        [lims[0][0], lims[1][1]],
+        [lims[0][1], lims[1][1]]
+    ]
+
+    out_corners = AABB(lims).corners
+    for c in aabb_corners:
+        assert c in out_corners
+
+    for c in out_corners:
+        assert c in aabb_corners
+
