@@ -511,7 +511,7 @@ class AABBTree(object):
         else:
             e_str = "method should be 'DFS' or 'BFS', not " + str(method)
             raise ValueError(e_str)
-        return values
+        return aabbs
 
     def overlap_values(self, aabb, method='DFS'):
         """Get values of overlapping AABBs
