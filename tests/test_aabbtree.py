@@ -125,7 +125,7 @@ def test_does_overlap():
         for i in indices:
             tree.add(aabbs[i])
 
-        for m in ('DFS', 'MFS'):
+        for m in ('DFS', 'BFS'):
             assert tree.does_overlap(aabb5, method=m)
             assert not tree.does_overlap(aabb6, method=m)
             assert not tree.does_overlap(aabb7, method=m)
