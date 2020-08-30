@@ -123,4 +123,3 @@ def test_corners():
 
     for c in out_corners:
         assert c in aabb_corners
-
