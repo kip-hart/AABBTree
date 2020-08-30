@@ -39,7 +39,6 @@ def test_str_str():
                                    leaf.__str__(1))
 
 
-
 def test_empty_repr():
     assert repr(AABBTree()) == 'AABBTree()'
 
@@ -173,6 +172,14 @@ def test_does_overlap():
             assert not not_tree.does_overlap(tree, method=m)
 
 
+def test_does_overlap_error():
+    method = -1
+    aabbs  = standard_aabbs()
+    tree = standard_tree()
+    with pytest.raises(ValueError):
+        tree.does_overlap(aabbs[0], method=method)
+
+
 def test_overlap_aabbs():
     aabbs = standard_aabbs()
     values = ['value 1', 3.14, None, None]
@@ -208,6 +215,14 @@ def test_overlap_aabbs():
         assert AABBTree(aabb5).overlap_aabbs(aabb7, method=m) == []
 
 
+def test_overlap_aabbs_error():
+    method = -1
+    aabbs  = standard_aabbs()
+    tree = standard_tree()
+    with pytest.raises(ValueError):
+        tree.overlap_aabbs(aabbs[0], method=method)
+
+
 def test_overlap_values():
     aabbs = standard_aabbs()
     values = ['value 1', 3.14, None, None]
@@ -232,6 +247,14 @@ def test_overlap_values():
 
     for m in ('DFS', 'BFS'):
         assert AABBTree(aabb5).overlap_values(aabb7, method=m) == []
+
+
+def test_overlap_values_error():
+    method = -1
+    aabbs  = standard_aabbs()
+    tree = standard_tree()
+    with pytest.raises(ValueError):
+        tree.overlap_values(aabbs[0], method=method)
 
 
 def test_depth():
