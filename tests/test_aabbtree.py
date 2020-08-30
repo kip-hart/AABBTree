@@ -29,8 +29,36 @@ def test_empty_str():
     assert str(AABBTree()) == empty_str
 
 
+def test_str_str():
+    aabb = standard_aabbs()[0]
+    value = 7
+    leaf = AABBTree(aabb)
+    tree = AABBTree(aabb=aabb, value=value, left=leaf, right=leaf)
+    fmt = 'AABB: {}\nValue: {}\nLeft:\n{}\nRight:\n{}'
+    assert str(tree) == fmt.format(str(aabb), str(value), leaf.__str__(1),
+                                   leaf.__str__(1))
+
+
 def test_empty_repr():
     assert repr(AABBTree()) == 'AABBTree()'
+
+
+def test_leaf_repr():
+    aabb = standard_aabbs()[0]
+    tree = AABBTree()
+    tree.add(aabb)
+    assert repr(tree) == 'AABBTree(aabb={})'.format(repr(aabb))
+
+
+def test_str_repr():
+    aabb = 'a'
+    value = 'v'
+    left = 'left'
+    right  = 'right'
+    tree = AABBTree(aabb=aabb, value=value, left=left, right=right)
+    fmt = 'AABBTree(aabb={}, value={}, left={}, right={})'
+    assert repr(tree) == fmt.format(repr(aabb), repr(value), repr(left),
+                                    repr(right))
 
 
 def test_eq():
@@ -144,6 +172,14 @@ def test_does_overlap():
             assert not not_tree.does_overlap(tree, method=m)
 
 
+def test_does_overlap_error():
+    method = -1
+    aabbs  = standard_aabbs()
+    tree = standard_tree()
+    with pytest.raises(ValueError):
+        tree.does_overlap(aabbs[0], method=method)
+
+
 def test_overlap_aabbs():
     aabbs = standard_aabbs()
     values = ['value 1', 3.14, None, None]
@@ -179,6 +215,14 @@ def test_overlap_aabbs():
         assert AABBTree(aabb5).overlap_aabbs(aabb7, method=m) == []
 
 
+def test_overlap_aabbs_error():
+    method = -1
+    aabbs  = standard_aabbs()
+    tree = standard_tree()
+    with pytest.raises(ValueError):
+        tree.overlap_aabbs(aabbs[0], method=method)
+
+
 def test_overlap_values():
     aabbs = standard_aabbs()
     values = ['value 1', 3.14, None, None]
@@ -203,6 +247,19 @@ def test_overlap_values():
 
     for m in ('DFS', 'BFS'):
         assert AABBTree(aabb5).overlap_values(aabb7, method=m) == []
+
+
+def test_overlap_values_error():
+    method = -1
+    aabbs  = standard_aabbs()
+    tree = standard_tree()
+    with pytest.raises(ValueError):
+        tree.overlap_values(aabbs[0], method=method)
+
+
+def test_depth():
+    assert AABBTree().depth == 0
+    assert standard_tree().depth == 2
 
 
 def standard_aabbs():
