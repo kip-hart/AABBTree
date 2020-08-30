@@ -205,6 +205,11 @@ def test_overlap_values():
         assert AABBTree(aabb5).overlap_values(aabb7, method=m) == []
 
 
+def test_depth():
+    assert AABBTree().depth == 0
+    assert standard_tree().depth == 2
+
+
 def standard_aabbs():
     aabb1 = AABB([(0, 1), (0, 1)])
     aabb2 = AABB([(3, 4), (0, 1)])
