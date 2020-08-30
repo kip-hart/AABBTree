@@ -29,8 +29,37 @@ def test_empty_str():
     assert str(AABBTree()) == empty_str
 
 
+def test_str_str():
+    aabb = standard_aabbs()[0]
+    value = 7
+    leaf = AABBTree(aabb)
+    tree = AABBTree(aabb=aabb, value=value, left=leaf, right=leaf)
+    fmt = 'AABB: {}\nValue: {}\nLeft:\n{}\nRight:\n{}'
+    assert str(tree) == fmt.format(str(aabb), str(value), leaf.__str__(1),
+                                   leaf.__str__(1))
+
+
+
 def test_empty_repr():
     assert repr(AABBTree()) == 'AABBTree()'
+
+
+def test_leaf_repr():
+    aabb = standard_aabbs()[0]
+    tree = AABBTree()
+    tree.add(aabb)
+    assert repr(tree) == 'AABBTree(aabb={})'.format(repr(aabb))
+
+
+def test_str_repr():
+    aabb = 'a'
+    value = 'v'
+    left = 'left'
+    right  = 'right'
+    tree = AABBTree(aabb=aabb, value=value, left=left, right=right)
+    fmt = 'AABBTree(aabb={}, value={}, left={}, right={})'
+    assert repr(tree) == fmt.format(repr(aabb), repr(value), repr(left),
+                                    repr(right))
 
 
 def test_eq():
