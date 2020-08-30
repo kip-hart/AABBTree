@@ -521,8 +521,13 @@ class AABBTree(object):
 
         This function gets each overlapping AABB.
 
+        *New  in version 2.6.0*
+
+        This method also supports overlap checks with another instance of the
+        AABBTree class.
+
         Args:
-            aabb (AABB): The AABB to check.
+            aabb (AABB or AABBTree): The AABB or AABBTree to check.
             method (str): {'DFS'|'BFS'} Method for traversing the tree.
                 Setting 'DFS' performs a depth-first search and 'BFS' performs
                 a breadth-first search. Defaults to 'DFS'.
@@ -530,34 +535,50 @@ class AABBTree(object):
         Returns:
             list: AABB objects in AABBTree that overlap with the input.
         """
+        if isinstance(aabb, AABB):
+            tree = AABBTree(aabb=aabb)
+        else:
+            tree = aabb
+
         aabbs = []
 
         if method == 'DFS':
-            is_leaf = self.is_leaf
-            if is_leaf and self.does_overlap(aabb):
+            if self.is_leaf and self.does_overlap(tree, method):
                 aabbs.append(self.aabb)
-            elif is_leaf:
+            elif self.is_leaf:
                 pass
+            elif tree.is_leaf:
+                for branch in (self.left, self.right):
+                    aabbs.extend(branch.overlap_aabbs(tree, method))
             else:
-                if self.left.aabb.overlaps(aabb):
-                    aabbs.extend(self.left.overlap_aabbs(aabb))
+                for s_branch in (self.left, self.right):
+                    for t_branch in (tree.left, tree.right):
+                        aabbs.extend(s_branch.overlap_aabbs(t_branch, method))
 
-                if self.right.aabb.overlaps(aabb):
-                    aabbs.extend(self.right.overlap_aabbs(aabb))
         elif method == 'BFS':
             q = deque()
-            q.append(self)
+            q.append((self, tree))
             while len(q) > 0:
-                node = q.popleft()
-                if node.aabb.overlaps(aabb):
-                    if node.is_leaf:
-                        aabbs.append(node.aabb)
+                s_node, t_node = q.popleft()
+                if s_node.aabb.overlaps(t_node.aabb):
+                    if s_node.is_leaf and t_node.is_leaf:
+                        aabbs.append(s_node.aabb)
+                    elif s_node.is_leaf:
+                        q.append((s_node, t_node.left))
+                        q.append((s_node, t_node.right))
+                    elif t_node.is_leaf:
+                        q.append((s_node.left, t_node))
+                        q.append((s_node.right, t_node))
                     else:
-                        q.append(node.left)
-                        q.append(node.right)
+                        q.append((s_node.left, t_node.left))
+                        q.append((s_node.left, t_node.right))
+                        q.append((s_node.right, t_node.left))
+                        q.append((s_node.right, t_node.right))
         else:
             e_str = "method should be 'DFS' or 'BFS', not " + str(method)
             raise ValueError(e_str)
+
+        aabbs = [box for i, box in enumerate(aabbs) if box not in aabbs[:i]]
         return aabbs
 
     def overlap_values(self, aabb, method='DFS'):
