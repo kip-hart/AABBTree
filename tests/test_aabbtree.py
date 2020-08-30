@@ -115,6 +115,10 @@ def test_does_overlap():
     aabb6 = AABB([(0, 1), (5, 6)])
     aabb7 = AABB([(6.5, 6.5), (5.5, 5.5)])
 
+    not_tree = AABBTree()
+    not_tree.add(aabb6)
+    not_tree.add(aabb7)
+
     for aabb in (aabb5, aabb6, aabb7):
         for m in ('DFS', 'BFS'):
             assert not AABBTree().does_overlap(aabb, method=m)
@@ -122,13 +126,22 @@ def test_does_overlap():
     aabbs = standard_aabbs()
     for indices in itertools.permutations(range(4)):
         tree = AABBTree()
-        for i in indices:
+        alt_tree = AABBTree()
+        for i_ind, i in enumerate(indices):
             tree.add(aabbs[i])
+            alt_tree.add(aabbs[i_ind])
 
         for m in ('DFS', 'BFS'):
+            assert tree.does_overlap(tree, method=m)
+            assert alt_tree.does_overlap(tree, method=m)
+            assert tree.does_overlap(alt_tree, method=m)
+
             assert tree.does_overlap(aabb5, method=m)
             assert not tree.does_overlap(aabb6, method=m)
             assert not tree.does_overlap(aabb7, method=m)
+
+            assert not tree.does_overlap(not_tree, method=m)
+            assert not not_tree.does_overlap(tree, method=m)
 
 
 def test_overlap_aabbs():
