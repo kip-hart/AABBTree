@@ -543,8 +543,8 @@ class AABBTree(object):
             else:
                 for s_branch in (self.left, self.right):
                     for t_branch in (tree.left, tree.right):
-                        p = s_branch._overlap_pairs(t_branch, method, halt)
-                        pairs.extend(p)
+                        pair = s_branch._overlap_pairs(t_branch, method, halt)
+                        pairs.extend(pair)
                         if halt and len(pairs) > 0:
                             return pairs
 

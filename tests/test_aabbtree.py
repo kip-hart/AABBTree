@@ -54,7 +54,7 @@ def test_str_repr():
     aabb = 'a'
     value = 'v'
     left = 'left'
-    right  = 'right'
+    right = 'right'
     tree = AABBTree(aabb=aabb, value=value, left=left, right=right)
     fmt = 'AABBTree(aabb={}, value={}, left={}, right={})'
     assert repr(tree) == fmt.format(repr(aabb), repr(value), repr(left),
@@ -174,7 +174,7 @@ def test_does_overlap():
 
 def test_does_overlap_error():
     method = -1
-    aabbs  = standard_aabbs()
+    aabbs = standard_aabbs()
     tree = standard_tree()
     with pytest.raises(ValueError):
         tree.does_overlap(aabbs[0], method=method)
@@ -217,7 +217,7 @@ def test_overlap_aabbs():
 
 def test_overlap_aabbs_error():
     method = -1
-    aabbs  = standard_aabbs()
+    aabbs = standard_aabbs()
     tree = standard_tree()
     with pytest.raises(ValueError):
         tree.overlap_aabbs(aabbs[0], method=method)
@@ -251,7 +251,7 @@ def test_overlap_values():
 
 def test_overlap_values_error():
     method = -1
-    aabbs  = standard_aabbs()
+    aabbs = standard_aabbs()
     tree = standard_tree()
     with pytest.raises(ValueError):
         tree.overlap_values(aabbs[0], method=method)
