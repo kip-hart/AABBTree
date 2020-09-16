@@ -1,0 +1,31 @@
+name: Documentation check
+
+on: [pull_request]
+
+jobs:   
+  docs-checks:
+    name: ${{ matrix.doc-type }}
+    strategy:
+      matrix:
+        doc-type: [html, latex, epub]
+    
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install docs dependencies
+      run: |
+        if [ -f docs/requirements.txt ]; then pip install -r docs/requirements.txt; fi
+        pip install matplotlib sphinx sphinx_rtd_theme
+    - name: Install package
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .
+    - name: Build ${{ matrix.doc-type }} documentation
+      run: |
+        python plot_incremental.py
+        sphinx-apidoc -T -o docs/source/ . setup.py plot_incremental.py
+        sphinx-build -Wnb ${{ matrix.doc-type }} docs/source/ docs/build-${{ matrix.doc-type }}/

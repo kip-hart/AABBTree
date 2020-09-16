@@ -123,3 +123,11 @@ def test_corners():
 
     for c in out_corners:
         assert c in aabb_corners
+
+
+def test_next():
+    box = [(0, 1), (0, 1)]
+    aabb = AABB(box)
+    aabb._i = 2 + 1
+    with pytest.raises(StopIteration):
+        aabb.__next__()

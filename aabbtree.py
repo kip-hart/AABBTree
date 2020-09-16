@@ -1,3 +1,5 @@
+"""Class definitions and methods for the AABB and AABBTree."""
+
 import copy
 from collections import deque
 
@@ -5,7 +7,7 @@ __all__ = ['AABB', 'AABBTree']
 __author__ = 'Kenneth (Kip) Hart'
 
 
-class AABB(object):
+class AABB(object):  # pylint: disable=useless-object-inheritance
     """Axis-aligned bounding box (AABB)
 
     The AABB is a d-dimensional box.
@@ -151,8 +153,8 @@ class AABB(object):
 
         """
         vol = 1
-        for lb, ub in self.limits:
-            vol *= ub - lb
+        for lower, upper in self.limits:
+            vol *= upper - lower
         return vol
 
     @property
@@ -160,12 +162,12 @@ class AABB(object):
         """list: corner points of AABB"""
 
         n_dim = len(self.limits)
-        f = '{:0' + str(n_dim) + 'b}'
+        fmt = '{:0' + str(n_dim) + 'b}'
 
         n_corners = 2 ** n_dim
         corners = []
         for i in range(n_corners):
-            inds = [int(s) for s in f.format(i)]  # convert i to binary list
+            inds = [int(s) for s in fmt.format(i)]  # convert i to binary list
             corner = [self.limits[d][ind] for d, ind in enumerate(inds)]
             corners.append(corner)
         return corners
@@ -222,7 +224,7 @@ class AABB(object):
         return volume
 
 
-class AABBTree(object):
+class AABBTree(object):  # pylint: disable=useless-object-inheritance
     """Static AABB Tree
 
     An AABB tree where the bounds of each AABB do not change.
@@ -300,8 +302,7 @@ class AABBTree(object):
     def __len__(self):
         if self.is_leaf:
             return int(self.aabb != AABB())
-        else:
-            return len(self.left) + len(self.right)
+        return len(self.left) + len(self.right)
 
     @property
     def is_leaf(self):
@@ -313,8 +314,7 @@ class AABBTree(object):
         """int: Depth of the tree"""
         if self.is_leaf:
             return 0
-        else:
-            return 1 + max(self.left.depth, self.right.depth)
+        return 1 + max(self.left.depth, self.right.depth)
 
     def add(self, aabb, value=None, method='volume'):
         r"""Add node to tree
@@ -395,13 +395,13 @@ class AABBTree(object):
                 right_merge = AABB.merge(self.right.aabb, aabb)
 
                 # Calculate the change in the sum of the bounding volumes
-                branch_bnd_cost = branch_merge.volume
+                branch_cost = branch_merge.volume
 
-                left_bnd_cost = branch_merge.volume - self.aabb.volume
-                left_bnd_cost += left_merge.volume - self.left.aabb.volume
+                left_cost = branch_merge.volume - self.aabb.volume
+                left_cost += left_merge.volume - self.left.aabb.volume
 
-                right_bnd_cost = branch_merge.volume - self.aabb.volume
-                right_bnd_cost += right_merge.volume - self.right.aabb.volume
+                right_cost = branch_merge.volume - self.aabb.volume
+                right_cost += right_merge.volume - self.right.aabb.volume
 
                 # Calculate amount of overlap
                 branch_olap_cost = self.aabb.overlap_volume(aabb)
@@ -409,9 +409,9 @@ class AABBTree(object):
                 right_olap_cost = right_merge.overlap_volume(self.left.aabb)
 
                 # Calculate total cost
-                branch_cost = branch_bnd_cost + branch_olap_cost
-                left_cost = left_bnd_cost + left_olap_cost
-                right_cost = right_bnd_cost + right_olap_cost
+                branch_cost += branch_olap_cost
+                left_cost += left_olap_cost
+                right_cost += right_olap_cost
             else:
                 raise ValueError('Unrecognized method: ' + str(method))
 
@@ -445,7 +445,7 @@ class AABBTree(object):
         Returns:
             bool: True if overlaps with a leaf node of tree.
         """
-        return len(self._overlap_pairs(aabb, method, halt=True)) > 0
+        return len(_overlap_pairs(self, aabb, method, halt=True)) > 0
 
     def overlap_aabbs(self, aabb, method='DFS'):
         """Get overlapping AABBs
@@ -466,7 +466,7 @@ class AABBTree(object):
         Returns:
             list: AABB objects in AABBTree that overlap with the input.
         """
-        pairs = self._overlap_pairs(aabb, method)
+        pairs = _overlap_pairs(self, aabb, method)
         if len(pairs) == 0:
             return []
         boxes, _ = zip(*pairs)
@@ -491,97 +491,113 @@ class AABBTree(object):
         Returns:
             list: Value fields of each node that overlaps.
         """
-        pairs = self._overlap_pairs(aabb, method)
+        pairs = _overlap_pairs(self, aabb, method)
         if len(pairs) == 0:
             return []
         _, values = zip(*pairs)
         return list(values)
 
-    def _overlap_pairs(self, aabb, method='DFS', halt=False):
-        """Get overlapping AABBs and values in (AABB, value) pairs
-
-        *New  in version 2.6.0*
-
-        This function gets each overlapping AABB and its value.
-
-        Args:
-            aabb (AABB or AABBTree): The AABB or AABBTree to check.
-            method (str): {'DFS'|'BFS'} Method for traversing the tree.
-                Setting 'DFS' performs a depth-first search and 'BFS' performs
-                a breadth-first search. Defaults to 'DFS'.
-            halt (bool):  Return the list immediately once a pair has been
-                added.
-
-        Returns:
-            list: (AABB, value) pairs in AABBTree that overlap with the input.
-        """
-        if isinstance(aabb, AABB):
-            tree = AABBTree(aabb=aabb)
-        else:
-            tree = aabb
-
-        pairs = []
-
-        if method == 'DFS':
-            if self.is_leaf and self.aabb.overlaps(tree.aabb):
-                if tree.is_leaf:
-                    pairs.append((self.aabb, self.value))
-                    if halt:
-                        return pairs
-                else:
-                    for branch in (tree.left, tree.right):
-                        pairs.extend(self._overlap_pairs(branch, method, halt))
-                        if halt and len(pairs) > 0:
-                            return pairs
-            elif self.is_leaf:
-                pass
-            elif tree.is_leaf:
-                for branch in (self.left, self.right):
-                    pairs.extend(branch._overlap_pairs(tree, method, halt))
-                    if halt and len(pairs) > 0:
-                        return pairs
-            else:
-                for s_branch in (self.left, self.right):
-                    for t_branch in (tree.left, tree.right):
-                        p = s_branch._overlap_pairs(t_branch, method, halt)
-                        pairs.extend(p)
-                        if halt and len(pairs) > 0:
-                            return pairs
-
-        elif method == 'BFS':
-            q = deque()
-            q.append((self, tree))
-            while len(q) > 0:
-                s_node, t_node = q.popleft()
-                if s_node.aabb.overlaps(t_node.aabb):
-                    if s_node.is_leaf and t_node.is_leaf:
-                        pairs.append((s_node.aabb, s_node.value))
-                        if halt:
-                            return pairs
-                    elif s_node.is_leaf:
-                        q.append((s_node, t_node.left))
-                        q.append((s_node, t_node.right))
-                    elif t_node.is_leaf:
-                        q.append((s_node.left, t_node))
-                        q.append((s_node.right, t_node))
-                    else:
-                        q.append((s_node.left, t_node.left))
-                        q.append((s_node.left, t_node.right))
-                        q.append((s_node.right, t_node.left))
-                        q.append((s_node.right, t_node.right))
-        else:
-            e_str = "method should be 'DFS' or 'BFS', not " + str(method)
-            raise ValueError(e_str)
-
-        if len(pairs) < 2:
-            return pairs
-        boxes, _ = zip(*pairs)
-        u_pairs = [p for i, p in enumerate(pairs) if p[0] not in boxes[:i]]
-        return u_pairs
-
 
 def _merge(lims1, lims2):
-    lb = min(lims1[0], lims2[0])
-    ub = max(lims1[1], lims2[1])
+    lower = min(lims1[0], lims2[0])
+    upper = max(lims1[1], lims2[1])
 
-    return (lb, ub)
+    return (lower, upper)
+
+
+def _overlap_pairs(in_tree, aabb, method='DFS', halt=False):
+    """Get overlapping AABBs and values in (AABB, value) pairs
+
+    *New  in version 2.6.0*
+
+    This function gets each overlapping AABB and its value.
+
+    Args:
+        in_tree: The AABBTree to compare with.
+        aabb (AABB or AABBTree): The AABB or AABBTree to check.
+        method (str): {'DFS'|'BFS'} Method for traversing the tree.
+            Setting 'DFS' performs a depth-first search and 'BFS' performs
+            a breadth-first search. Defaults to 'DFS'.
+        halt (bool):  Return the list immediately once a pair has been
+            added.
+
+    Returns:
+        list: (AABB, value) pairs in AABBTree that overlap with the input.
+    """
+    if isinstance(aabb, AABB):
+        tree = AABBTree(aabb=aabb)
+    else:
+        tree = aabb
+
+    if method == 'DFS':
+        pairs = _overlap_dfs(in_tree, tree, halt)
+
+    elif method == 'BFS':
+        pairs = _overlap_bfs(in_tree, tree, halt)
+    else:
+        e_str = "method should be 'DFS' or 'BFS', not " + str(method)
+        raise ValueError(e_str)
+
+    if len(pairs) < 2:
+        return pairs
+    return _unique_pairs(pairs)
+
+
+def _overlap_dfs(in_tree, tree, halt):
+    pairs = []
+
+    if in_tree.is_leaf:
+        in_branches = [in_tree]
+    else:
+        in_branches = [in_tree.left, in_tree.right]
+
+    if tree.is_leaf:
+        tree_branches = [tree]
+    else:
+        tree_branches = [tree.left, tree.right]
+
+    if not in_tree.aabb.overlaps(tree.aabb):
+        return pairs
+
+    if in_tree.is_leaf and tree.is_leaf:
+        pairs.append((in_tree.aabb, in_tree.value))
+        return pairs
+
+    for in_branch in in_branches:
+        for tree_branch in tree_branches:
+            o_pairs = _overlap_dfs(in_branch, tree_branch, halt)
+            pairs.extend(o_pairs)
+            if halt and len(pairs) > 0:
+                return pairs
+    return pairs
+
+
+def _overlap_bfs(in_tree, tree, halt):
+    pairs = []
+    queue = deque()
+    queue.append((in_tree, tree))
+    while len(queue) > 0:
+        s_node, t_node = queue.popleft()
+        if s_node.aabb.overlaps(t_node.aabb):
+            if s_node.is_leaf and t_node.is_leaf:
+                pairs.append((s_node.aabb, s_node.value))
+                if halt:
+                    return pairs
+            elif s_node.is_leaf:
+                queue.append((s_node, t_node.left))
+                queue.append((s_node, t_node.right))
+            elif t_node.is_leaf:
+                queue.append((s_node.left, t_node))
+                queue.append((s_node.right, t_node))
+            else:
+                queue.append((s_node.left, t_node.left))
+                queue.append((s_node.left, t_node.right))
+                queue.append((s_node.right, t_node.left))
+                queue.append((s_node.right, t_node.right))
+    return pairs
+
+
+def _unique_pairs(pairs):
+    boxes, _ = zip(*pairs)
+    u_pairs = [p for i, p in enumerate(pairs) if p[0] not in boxes[:i]]
+    return u_pairs

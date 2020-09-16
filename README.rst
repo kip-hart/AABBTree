@@ -3,13 +3,15 @@
 AABBTree - Axis-Aligned Bounding Box Trees
 ==========================================
 
-|s-travis|
-|s-cov|
-|s-license|
+.. only: html
 
-|l-github| `Repository`_
-|l-rtd| `Documentation`_
-|l-pypi| `PyPI`_
+  |s-ci|
+  |s-cov|
+  |s-license|
+
+  |l-github| `Repository`_
+  |l-rtd| `Documentation`_
+  |l-pypi| `PyPI`_
 
 AABBTree is a pure Python implementation of a static d-dimensional
 axis aligned bounding box (AABB) tree. It is inspired by
@@ -108,28 +110,39 @@ Copyright |copy| 2020, Georgia Tech Research Corporation
 AABBTree is open source and freely available under the terms of
 the MIT license.
 
-
 .. |copy| unicode:: 0xA9 .. copyright sign
+
+.. LINKS
+
 .. _`AABBTree repository` : https://github.com/kip-hart/AABBTree
 .. _`Repository` : https://github.com/kip-hart/AABBTree
 .. _`Documentation` : https://aabbtree.readthedocs.io
 .. _`PyPI` : https://pypi.org/project/aabbtree/
 .. _`Introductory Guide to AABB Tree Collision Detection` : https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/
+
+.. SHIELDS
+
 .. |s-license| image:: https://img.shields.io/pypi/l/aabbtree.svg
     :target: https://github.com/kip-hart/AABBTree/blob/master/LICENSE.rst
     :alt: License
+
 .. |s-docs| image:: https://readthedocs.org/projects/aabbtree/badge/?version=latest
     :target: https://aabbtree.readthedocs.io
     :alt: Documentation Status
-.. |s-travis| image:: https://travis-ci.org/kip-hart/AABBTree.svg?branch=master
-    :target: https://travis-ci.org/kip-hart/AABBTree
-    :alt: Travis CI
+
+.. |s-ci| image:: https://img.shields.io/github/workflow/status/kip-hart/AABBTree/CI?labelColor=grey
+    :target: https://github.com/kip-hart/AABBTree/actions
+    :alt: Continuous Integration
+
 .. |s-cov| image:: https://coveralls.io/repos/github/kip-hart/AABBTree/badge.svg?branch=master
     :target: https://coveralls.io/github/kip-hart/AABBTree?branch=master
     :alt: Coverage
+
 .. |s-pver| image:: https://img.shields.io/pypi/v/aabbtree.svg
     :target: https://pypi.org/project/aabbtree/
     :alt: PyPI
+
+.. ICONS
 
 .. |l-github| image:: https://api.iconify.design/octicon:mark-github.svg?color=black0&inline=true&height=16
     :target: https://github.com/kip-hart/AABBTree
