@@ -24,9 +24,9 @@ copyright = '2020, Georgia Tech Research Corporation'
 author = 'Kenneth Hart'
 
 # The short X.Y version
-version = '2.5'
+version = '2.6'
 # The full version, including alpha/beta/rc tags
-release = '2.5.0'
+release = '2.6.2'
 
 
 # -- General configuration ---------------------------------------------------
@@ -73,6 +73,21 @@ exclude_patterns = []
 pygments_style = 'sphinx'
 
 autodoc_member_order = 'groupwise'
+
+
+# Ignore
+nitpick_ignore = [
+    ('py:class', 'AABB'),
+    ('py:class', 'AABBTree'),
+    ('py:class', 'bool'),
+    ('py:class', 'float'),
+    ('py:class', 'int'),
+    ('py:class', 'iterable'),
+    ('py:class', 'list'),
+    ('py:class', 'object'),
+    ('py:class', 'optional'),
+    ('py:class', 'str'),
+]
 
 
 # -- Options for HTML output -------------------------------------------------
