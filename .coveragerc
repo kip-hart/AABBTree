@@ -1,0 +1,5 @@
+[run]
+omit =
+    plot_incremental.py
+    setup.py
+    tests/*
