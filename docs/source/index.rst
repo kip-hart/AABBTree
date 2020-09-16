@@ -1,5 +1,8 @@
 .. AABBTree documentation master file.
 
+.. include:: ../../README.rst
+    :end-before: .. begin-badges
+
 .. Introduction
 .. include:: ../../README.rst
     :start-after: .. begin-introduction

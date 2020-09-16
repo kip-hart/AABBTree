@@ -1,17 +1,17 @@
-.. begin-introduction
-
 AABBTree - Axis-Aligned Bounding Box Trees
 ==========================================
 
-.. only: html
+.. begin-badges
 
-  |s-ci|
-  |s-cov|
-  |s-license|
+|s-ci|
+|s-cov|
+|s-license|
 
-  |l-github| `Repository`_
-  |l-rtd| `Documentation`_
-  |l-pypi| `PyPI`_
+|l-github| `Repository`_
+|l-rtd| `Documentation`_
+|l-pypi| `PyPI`_
+
+.. begin-introduction
 
 AABBTree is a pure Python implementation of a static d-dimensional
 axis aligned bounding box (AABB) tree. It is inspired by
