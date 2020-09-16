@@ -45,6 +45,9 @@ extensions = [
     'sphinx.ext.viewcode'
 ]
 
+# Suppress "WARNING: unknown mimetype for ..."
+suppress_warnings = ['epub.unknown_project_files']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
