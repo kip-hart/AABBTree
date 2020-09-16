@@ -105,7 +105,7 @@ create a pull request, and submit issues.
 License and Copyright Notice
 ============================
 
-Copyright |copy| 2020, Georgia Tech Research Corporation
+Copyright |copy| 2019-2020, Georgia Tech Research Corporation
 
 AABBTree is open source and freely available under the terms of
 the MIT license.
