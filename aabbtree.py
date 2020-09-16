@@ -7,7 +7,7 @@ __all__ = ['AABB', 'AABBTree']
 __author__ = 'Kenneth (Kip) Hart'
 
 
-class AABB(object):  #pylint: disable=useless-object-inheritance
+class AABB(object):  # pylint: disable=useless-object-inheritance
     """Axis-aligned bounding box (AABB)
 
     The AABB is a d-dimensional box.
@@ -224,7 +224,7 @@ class AABB(object):  #pylint: disable=useless-object-inheritance
         return volume
 
 
-class AABBTree(object):  #pylint: disable=useless-object-inheritance
+class AABBTree(object):  # pylint: disable=useless-object-inheritance
     """Static AABB Tree
 
     An AABB tree where the bounds of each AABB do not change.
