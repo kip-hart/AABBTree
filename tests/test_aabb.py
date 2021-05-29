@@ -119,6 +119,7 @@ def test_overlaps_closed():
     assert not aabb2.overlaps(aabb3, True)
     assert not aabb1.overlaps(aabb4, True)
     assert not aabb2.overlaps(aabb4, True)
+    assert not aabb1.overlaps(AABB(), True)
 
 
 def test_corners():
