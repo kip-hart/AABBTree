@@ -146,9 +146,10 @@ jobs:
     - name: Lint with isort
       run: |
         isort --verbose --check-only --diff src tests setup.py
-    - name: Lint with GitHub Super-Linter
-      env:
-        VALIDATE_CSS: False
-        VALIDATE_HTML: False
-        VALIDATE_PYTHON_BLACK: False
-      uses: docker://github/super-linter
+    # Ignore for now
+    # - name: Lint with GitHub Super-Linter
+    #   env:
+    #     VALIDATE_CSS: False
+    #     VALIDATE_HTML: False
+    #     VALIDATE_PYTHON_BLACK: False
+    #   uses: docker://github/super-linter
