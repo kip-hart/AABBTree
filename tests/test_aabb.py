@@ -111,8 +111,8 @@ def test_overlaps():
 def test_overlaps_closed():
     aabb1 = AABB([(0, 0)])
     aabb2 = AABB([(-1, 0)])
-    aabb3 = AABB([1, 2])
-    aabb4 = AABB([-9, -8])
+    aabb3 = AABB([(1, 2)])
+    aabb4 = AABB([(-9, -8)])
 
     assert aabb1.overlaps(aabb2, True)
     assert aabb2.overlaps(aabb1, True)
