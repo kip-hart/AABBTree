@@ -1,4 +1,5 @@
 import pytest
+
 from aabbtree import AABB
 
 

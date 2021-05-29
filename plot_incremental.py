@@ -1,8 +1,9 @@
 import os
 
-import aabbtree
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+
+import aabbtree
 
 
 def plot_contents(tree, level=0):
