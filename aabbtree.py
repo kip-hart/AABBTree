@@ -172,15 +172,24 @@ class AABB(object):  # pylint: disable=useless-object-inheritance
             corners.append(corner)
         return corners
 
-    def overlaps(self, aabb):
+    def overlaps(self, aabb, closed=False):
         """Determine if two AABBs overlap
 
         Args:
             aabb (AABB): The AABB to check for overlap
+            closed (bool): Flag for closed overlap between AABBs. For the case
+                where one box is [-1, 0] and the other is [0, 0], the two boxes
+                are interecting if closed is set to True and they are not
+                intersecting if closed is set to False.
 
         Returns:
             bool: Flag set to true if the two AABBs overlap
         """
+        if closed:
+            return self._overlaps_closed(aabb)
+        return self._overlaps_open(aabb)
+
+    def _overlaps_open(self, aabb):
         if (self.limits is None) or (aabb.limits is None):
             return False
 
@@ -190,6 +199,19 @@ class AABB(object):  # pylint: disable=useless-object-inheritance
             if min2 >= max1:
                 return False
         return True
+
+    def _overlaps_closed(self, aabb):
+        if (self.limits is None) or (aabb.limits is None):
+            return False
+
+        for (min1, max1), (min2, max2) in zip(self.limits, aabb.limits):
+            if min1 > max2:
+                return False
+            if min2 > max1:
+                return False
+        return True
+
+
 
     def overlap_volume(self, aabb):
         r"""Determine volume of overlap between AABBs
@@ -425,7 +447,7 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
                 self.right.add(aabb, value)
             self.aabb = AABB.merge(self.left.aabb, self.right.aabb)
 
-    def does_overlap(self, aabb, method='DFS'):
+    def does_overlap(self, aabb, method='DFS', closed=False):
         """Check for overlap
 
         This function checks if the limits overlap any leaf nodes in the tree.
@@ -441,13 +463,17 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
             method (str): {'DFS'|'BFS'} Method for traversing the tree.
                 Setting 'DFS' performs a depth-first search and 'BFS' performs
                 a breadth-first search. Defaults to 'DFS'.
+            closed (bool): Option to specify closed or open box intersection.
+                If open, there must be a non-zero amount of overlap. If closed,
+                boxes can be touching.
 
         Returns:
             bool: True if overlaps with a leaf node of tree.
         """
-        return len(_overlap_pairs(self, aabb, method, halt=True)) > 0
 
-    def overlap_aabbs(self, aabb, method='DFS'):
+        return len(_overlap_pairs(self, aabb, method, True, closed)) > 0
+
+    def overlap_aabbs(self, aabb, method='DFS', closed=False):
         """Get overlapping AABBs
 
         This function gets each overlapping AABB.
@@ -462,17 +488,20 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
             method (str): {'DFS'|'BFS'} Method for traversing the tree.
                 Setting 'DFS' performs a depth-first search and 'BFS' performs
                 a breadth-first search. Defaults to 'DFS'.
+            closed (bool): Option to specify closed or open box intersection.
+                If open, there must be a non-zero amount of overlap. If closed,
+                boxes can be touching.
 
         Returns:
             list: AABB objects in AABBTree that overlap with the input.
         """
-        pairs = _overlap_pairs(self, aabb, method)
+        pairs = _overlap_pairs(self, aabb, method, closed=closed)
         if len(pairs) == 0:
             return []
         boxes, _ = zip(*pairs)
         return list(boxes)
 
-    def overlap_values(self, aabb, method='DFS'):
+    def overlap_values(self, aabb, method='DFS', closed=False):
         """Get values of overlapping AABBs
 
         This function gets the value field of each overlapping AABB.
@@ -487,11 +516,14 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
             method (str): {'DFS'|'BFS'} Method for traversing the tree.
                 Setting 'DFS' performs a depth-first search and 'BFS' performs
                 a breadth-first search. Defaults to 'DFS'.
+            closed (bool): Option to specify closed or open box intersection.
+                If open, there must be a non-zero amount of overlap. If closed,
+                boxes can be touching.
 
         Returns:
             list: Value fields of each node that overlaps.
         """
-        pairs = _overlap_pairs(self, aabb, method)
+        pairs = _overlap_pairs(self, aabb, method, closed=closed)
         if len(pairs) == 0:
             return []
         _, values = zip(*pairs)
@@ -505,7 +537,7 @@ def _merge(lims1, lims2):
     return (lower, upper)
 
 
-def _overlap_pairs(in_tree, aabb, method='DFS', halt=False):
+def _overlap_pairs(in_tree, aabb, method='DFS', halt=False, closed=False):
     """Get overlapping AABBs and values in (AABB, value) pairs
 
     *New  in version 2.6.0*
@@ -518,8 +550,9 @@ def _overlap_pairs(in_tree, aabb, method='DFS', halt=False):
         method (str): {'DFS'|'BFS'} Method for traversing the tree.
             Setting 'DFS' performs a depth-first search and 'BFS' performs
             a breadth-first search. Defaults to 'DFS'.
-        halt (bool):  Return the list immediately once a pair has been
+        halt (bool): Return the list immediately once a pair has been
             added.
+        closed (bool): Check for closed box intersection. Defaults to False.
 
     Returns:
         list: (AABB, value) pairs in AABBTree that overlap with the input.
@@ -530,10 +563,10 @@ def _overlap_pairs(in_tree, aabb, method='DFS', halt=False):
         tree = aabb
 
     if method == 'DFS':
-        pairs = _overlap_dfs(in_tree, tree, halt)
+        pairs = _overlap_dfs(in_tree, tree, halt, closed)
 
     elif method == 'BFS':
-        pairs = _overlap_bfs(in_tree, tree, halt)
+        pairs = _overlap_bfs(in_tree, tree, halt, closed)
     else:
         e_str = "method should be 'DFS' or 'BFS', not " + str(method)
         raise ValueError(e_str)
@@ -543,7 +576,7 @@ def _overlap_pairs(in_tree, aabb, method='DFS', halt=False):
     return _unique_pairs(pairs)
 
 
-def _overlap_dfs(in_tree, tree, halt):
+def _overlap_dfs(in_tree, tree, halt, closed):
     pairs = []
 
     if in_tree.is_leaf:
@@ -556,7 +589,7 @@ def _overlap_dfs(in_tree, tree, halt):
     else:
         tree_branches = [tree.left, tree.right]
 
-    if not in_tree.aabb.overlaps(tree.aabb):
+    if not in_tree.aabb.overlaps(tree.aabb, closed):
         return pairs
 
     if in_tree.is_leaf and tree.is_leaf:
@@ -565,20 +598,20 @@ def _overlap_dfs(in_tree, tree, halt):
 
     for in_branch in in_branches:
         for tree_branch in tree_branches:
-            o_pairs = _overlap_dfs(in_branch, tree_branch, halt)
+            o_pairs = _overlap_dfs(in_branch, tree_branch, halt, closed)
             pairs.extend(o_pairs)
             if halt and len(pairs) > 0:
                 return pairs
     return pairs
 
 
-def _overlap_bfs(in_tree, tree, halt):
+def _overlap_bfs(in_tree, tree, halt, closed):
     pairs = []
     queue = deque()
     queue.append((in_tree, tree))
     while len(queue) > 0:
         s_node, t_node = queue.popleft()
-        if s_node.aabb.overlaps(t_node.aabb):
+        if s_node.aabb.overlaps(t_node.aabb, closed):
             if s_node.is_leaf and t_node.is_leaf:
                 pairs.append((s_node.aabb, s_node.value))
                 if halt:
