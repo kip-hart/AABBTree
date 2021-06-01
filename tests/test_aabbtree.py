@@ -262,6 +262,22 @@ def test_depth():
     assert standard_tree().depth == 2
 
 
+def test_unique():
+    tree = AABBTree()
+    aabb1 = AABB([(0, 1)])
+    aabb2 = AABB([(0, 1)])
+    aabb3 = AABB([(0, 1)])
+    tree.add(aabb1, 'box 1')
+    tree.add(aabb2, 'box 2')
+    vals = tree.overlap_values(aabb3, unique=True)
+    assert len(vals) == 1
+
+    vals = tree.overlap_values(aabb3, unique=False)
+    assert len(vals) == 2
+    assert 'box 1' in vals
+    assert 'box 2' in vals
+
+
 def standard_aabbs():
     aabb1 = AABB([(0, 1), (0, 1)])
     aabb2 = AABB([(3, 4), (0, 1)])
