@@ -473,7 +473,7 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
 
         return len(_overlap_pairs(self, aabb, method, True, closed)) > 0
 
-    def overlap_aabbs(self, aabb, method='DFS', closed=False):
+    def overlap_aabbs(self, aabb, method='DFS', closed=False, unique=True):
         """Get overlapping AABBs
 
         This function gets each overlapping AABB.
@@ -491,17 +491,19 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
             closed (bool): Option to specify closed or open box intersection.
                 If open, there must be a non-zero amount of overlap. If closed,
                 boxes can be touching.
+        unique (bool): Return only unique pairs. Defaults to True.
 
         Returns:
             list: AABB objects in AABBTree that overlap with the input.
         """
-        pairs = _overlap_pairs(self, aabb, method, closed=closed)
+        pairs = _overlap_pairs(self, aabb, method, closed=closed,
+                               unique=unique)
         if len(pairs) == 0:
             return []
         boxes, _ = zip(*pairs)
         return list(boxes)
 
-    def overlap_values(self, aabb, method='DFS', closed=False):
+    def overlap_values(self, aabb, method='DFS', closed=False, unique=True):
         """Get values of overlapping AABBs
 
         This function gets the value field of each overlapping AABB.
@@ -519,11 +521,13 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
             closed (bool): Option to specify closed or open box intersection.
                 If open, there must be a non-zero amount of overlap. If closed,
                 boxes can be touching.
+        unique (bool): Return only unique pairs. Defaults to True.
 
         Returns:
             list: Value fields of each node that overlaps.
         """
-        pairs = _overlap_pairs(self, aabb, method, closed=closed)
+        pairs = _overlap_pairs(self, aabb, method, closed=closed,
+                               unique=unique)
         if len(pairs) == 0:
             return []
         _, values = zip(*pairs)
@@ -537,7 +541,8 @@ def _merge(lims1, lims2):
     return (lower, upper)
 
 
-def _overlap_pairs(in_tree, aabb, method='DFS', halt=False, closed=False):
+def _overlap_pairs(in_tree, aabb, method='DFS', halt=False, closed=False, 
+                   unique=True):
     """Get overlapping AABBs and values in (AABB, value) pairs
 
     *New  in version 2.6.0*
@@ -553,6 +558,7 @@ def _overlap_pairs(in_tree, aabb, method='DFS', halt=False, closed=False):
         halt (bool): Return the list immediately once a pair has been
             added.
         closed (bool): Check for closed box intersection. Defaults to False.
+        unique (bool): Return only unique pairs. Defaults to True.
 
     Returns:
         list: (AABB, value) pairs in AABBTree that overlap with the input.
@@ -571,7 +577,7 @@ def _overlap_pairs(in_tree, aabb, method='DFS', halt=False, closed=False):
         e_str = "method should be 'DFS' or 'BFS', not " + str(method)
         raise ValueError(e_str)
 
-    if len(pairs) < 2:
+    if len(pairs) < 2 or not unique:
         return pairs
     return _unique_pairs(pairs)
 
