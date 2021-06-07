@@ -7,6 +7,8 @@ AABBTree - Axis-Aligned Bounding Box Trees
 |s-cov|
 |s-license|
 
+|s-doi1|
+
 |l-github| `Repository`_
 |l-rtd| `Documentation`_
 |l-pypi| `PyPI`_
@@ -101,6 +103,19 @@ Contributions to the project are welcome.
 Please visit the `AABBTree repository`_ to clone the source files,
 create a pull request, and submit issues.
 
+Publication
+===========
+
+If you use AABBTree in you work, please consider including this citation
+in your bibliography:
+
+K. A. Hart and J. J. Rimoli, Generation of statistically representative
+microstructures with direct grain geomety control,
+*Computer Methods in Applied Mechanics and Engineering*, 370 (2020), 113242.
+(`BibTeX <https://github.com/kip-hart/MicroStructPy/raw/master/docs/publications/cmame2020.bib>`__)
+(`DOI <https://doi.org/10.1016/j.cma.2020.113242>`__)
+
+The incremental insertion method is discussed in section 2.2.2 of the paper.
 
 License and Copyright Notice
 ============================
@@ -141,6 +156,10 @@ the MIT license.
 .. |s-pver| image:: https://img.shields.io/pypi/v/aabbtree.svg
     :target: https://pypi.org/project/aabbtree/
     :alt: PyPI
+
+.. |s-doi1| image:: https://img.shields.io/badge/DOI-10.1016%2Fj.cma.2020.113242-blue
+   :target: https://doi.org/10.1016/j.cma.2020.113242
+   :alt: CMAME DOI
 
 .. ICONS
 
