@@ -1,6 +1,5 @@
 """Class definitions and methods for the AABB and AABBTree."""
 
-import copy
 from collections import deque
 
 __all__ = ['AABB', 'AABBTree']
@@ -404,7 +403,7 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
             self.value = value
 
         elif self.is_leaf:
-            self.left = copy.deepcopy(self)
+            self.left = AABBTree(self.aabb, value=self.value, left=self.left, right=self.right)
             self.right = AABBTree(aabb, value)
 
             self.aabb = AABB.merge(self.aabb, aabb)
@@ -438,7 +437,7 @@ class AABBTree(object):  # pylint: disable=useless-object-inheritance
                 raise ValueError('Unrecognized method: ' + str(method))
 
             if branch_cost < left_cost and branch_cost < right_cost:
-                self.left = copy.deepcopy(self)
+                self.left = AABBTree(self.aabb, value=self.value, left=self.left, right=self.right)
                 self.right = AABBTree(aabb, value)
                 self.value = None
             elif left_cost < right_cost:

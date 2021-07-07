@@ -257,6 +257,20 @@ def test_overlap_values_error():
         tree.overlap_values(aabbs[0], method=method)
 
 
+def test_return_the_origin_pass_in_value():
+    class Foo:
+        pass
+
+    tree = AABBTree()
+    value_set = {Foo() for _ in range(10)}
+
+    for value in value_set:
+        tree.add(AABB([(0, 1), (0, 1)]), value=value)
+
+    retrieved_value_set = set(tree.overlap_values(AABB([(0, 2), (0, 2)]), unique=False))
+    assert retrieved_value_set == value_set
+
+
 def test_depth():
     assert AABBTree().depth == 0
     assert standard_tree().depth == 2
