@@ -145,7 +145,7 @@ the MIT license.
     :target: https://aabbtree.readthedocs.io
     :alt: Documentation Status
 
-.. |s-ci| image:: https://img.shields.io/github/workflow/status/kip-hart/AABBTree/CI?labelColor=grey
+.. |s-ci| image:: https://img.shields.io/github/actions/workflow/status/kip-hart/AABBTree/python_package.yaml?labelColor=grey
     :target: https://github.com/kip-hart/AABBTree/actions
     :alt: Continuous Integration
 
