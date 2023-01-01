@@ -120,7 +120,7 @@ The incremental insertion method is discussed in section 2.2.2 of the paper.
 License and Copyright Notice
 ============================
 
-Copyright |copy| 2019-2022, Georgia Tech Research Corporation
+Copyright |copy| 2019-2023, Georgia Tech Research Corporation
 
 AABBTree is open source and freely available under the terms of
 the MIT license.
@@ -145,7 +145,7 @@ the MIT license.
     :target: https://aabbtree.readthedocs.io
     :alt: Documentation Status
 
-.. |s-ci| image:: https://img.shields.io/github/workflow/status/kip-hart/AABBTree/CI?labelColor=grey
+.. |s-ci| image:: https://img.shields.io/github/actions/workflow/status/kip-hart/AABBTree/python_package.yaml?labelColor=grey
     :target: https://github.com/kip-hart/AABBTree/actions
     :alt: Continuous Integration
 
