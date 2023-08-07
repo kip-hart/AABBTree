@@ -6,6 +6,7 @@ include aabbtree.py
 include .bumpversion.cfg
 include .coveragerc
 include .editorconfig
+include .readthedocs.yaml
 
 include LICENSE.rst
 include README.rst
