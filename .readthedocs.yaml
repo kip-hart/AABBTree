@@ -19,4 +19,5 @@ sphinx:
 
 python:
   install:
-    - sphinx-rtd-theme
+    - extra_requirements:
+        - sphinx-rtd-theme
