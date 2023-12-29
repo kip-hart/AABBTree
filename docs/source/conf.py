@@ -43,7 +43,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinx_rtd_theme',
+    'sphinx-rtd-theme',
 ]
 
 # Suppress "WARNING: unknown mimetype for ..."
