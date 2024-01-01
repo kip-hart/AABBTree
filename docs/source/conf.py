@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'AABBTree'
-copyright = '2019-2023, Georgia Tech Research Corporation'
+copyright = '2019-2024, Georgia Tech Research Corporation'
 author = 'Kenneth Hart'
 
 # The short X.Y version
@@ -42,7 +42,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
 ]
 
 # Suppress "WARNING: unknown mimetype for ..."
