@@ -1,8 +1,5 @@
-.. AABBTree documentation master file.
+=================
+Introduction
+=================
 
-.. include:: ../../README.rst
-    :end-before: .. begin-introduction
-
-
-.. include:: contents.rst
-    :start-after: .. Introduction
+Hello World!
