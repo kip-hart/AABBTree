@@ -1,5 +1,5 @@
 AABBTree - Axis-Aligned Bounding Box Trees
-==========================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. begin-badges
 
