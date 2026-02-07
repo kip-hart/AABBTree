@@ -104,10 +104,7 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#
-html_theme_options = {
-    'collapse_navigation': False
-}
+# html_theme_options = {}
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -129,12 +126,6 @@ html_title = 'AABBTree'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-html_context = {'css_files': ['_static/theme_overrides.css'],
-                'commit': False}
-# the above was copied from:
-# https://rackerlabs.github.io/docs-rackspace/tools/rtd-tables.html
-# it fixes the table widths in the RTD theme
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -236,3 +227,13 @@ texinfo_documents = [
      'Pure Python implementation of d-dimensional AABB tree.',
      'Miscellaneous'),
 ]
+
+
+# -- Override for table width ------------------------------------------------
+
+def setup(app):
+    app.add_css_file('theme_overrides.css')
+
+# the above was copied from:
+# https://rackerlabs.github.io/docs-rackspace/tools/rtd-tables.html
+# it fixes the table widths in the RTD theme
