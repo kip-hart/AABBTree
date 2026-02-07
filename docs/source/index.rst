@@ -30,6 +30,7 @@
 .. Contributing and license
 .. include:: ../../README.rst
   :start-after: .. end-documentation
+  :end-before: .. SHIELDS
 
 .. admonition:: License
 
