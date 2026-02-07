@@ -1,5 +1,5 @@
 AABBTree - Axis-Aligned Bounding Box Trees
-==========================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. begin-badges
 
@@ -120,7 +120,7 @@ The incremental insertion method is discussed in section 2.2.2 of the paper.
 License and Copyright Notice
 ============================
 
-Copyright |copy| 2019-2023, Georgia Tech Research Corporation
+Copyright |copy| 2019-2026, Georgia Tech Research Corporation
 
 AABBTree is open source and freely available under the terms of
 the MIT license.

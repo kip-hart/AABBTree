@@ -1,5 +1,7 @@
 .. AABBTree documentation master file.
 
+.. Ignore badges
+.. Cause failing LaTeX build
 .. include:: ../../README.rst
     :end-before: .. begin-badges
 
@@ -28,6 +30,7 @@
 .. Contributing and license
 .. include:: ../../README.rst
   :start-after: .. end-documentation
+  :end-before: .. SHIELDS
 
 .. admonition:: License
 
